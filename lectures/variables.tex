@@ -1,0 +1,222 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage{graphicx}
+
+\theoremstyle{definition}
+\newtheorem{mydef}[theorem]{Определение}
+\newtheorem{properties}[theorem]{Свойства}
+\newtheorem{proposition}[theorem]{Утверждение}
+\newtheorem{remark}[theorem]{Замечание}
+\newtheorem{myexample}[theorem]{Пример}
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Вероятностные пространства, случайные величины и функции распределения (+ бонус интеграл Римана-Стилтьеса).}
+\author[Ж. Жуматаев, М. Абрахам]{Ж. Жуматаев, М. Абрахам}
+\institute[Клуб теории вероятностей]{Клуб теории вероятностей ФЭН ВШЭ}
+\date{\today}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+\newcommand\mytext{Основы Теории Вероятностей}
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  
+  \mytext 
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+
+
+\begin{document}  % начало презентации
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Мотивация}
+\begin{itemize}
+    \item Большинство сегодняшних выкладок, связанные с основами ТВ, скорее всего вам уже знакомы;
+    \item Однако так как мы тут хотим построить более менее строгую теорию, то их все равно надо проговорить и доказать;
+    \item Сегодня постараемся ввести базовые понятия ТВ, используя новый для нас инструментарий теории меры, а также порешать задачи для освоения этих важных тем;
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{База}
+    
+    \begin{mydef}[Вероятностное пространство $(\Omega,\,\mathcal{F},\,\mathbb{P})$]
+    Вероятностным пространством называется измеримое пространство $(X,\, \Sigma_X,\, \mu) = (\Omega,\, \mathcal{F},\, \mathbb{P})$ с вероятностной мерой, где:
+    \begin{enumerate}
+        \item $\Omega$ - Пространство элементарных исходов,
+        \item $\mathcal{F}$ - $\sigma$-алгебра на $\Omega$,
+        \item $\mathbb{P}: \mathcal{F}\to [0,1]$ - вероятностная мера.
+    \end{enumerate}
+    \end{mydef}
+    
+\end{frame}
+
+\begin{frame}{Случайная величина}
+    
+    \begin{mydef}[Случайная величина]
+    Случайной величиной называется измеримая функция $\xi: \Omega \to \mathbb{R}$.
+    Напомним, что функция $f$ называется измеримой, \\
+    если $\forall B \in \Sigma_Y$ выполнено $f^{-1}(B) \in \Sigma_X$ или в нашем случае:\\
+    если $\forall B \in \mathcal{B}(\mathbb{R})$ выполнено $\xi^{-1}(B) \in \mathcal{F}$
+    \end{mydef}
+    Почему именно такой вид?\\
+    При таком определении с.в. следующая запись имеет смысл:
+    $\mathbb{P}\{\xi^{-1}(B)\} = \mathbb{P}\{\omega \in \Omega:\, \xi(w) \in B\}$
+    
+\end{frame}
+
+\begin{frame}{Лирическое отступление}
+    
+    Понятие измеримости функции является частным случаем более общего понятия: непрерывного отображения в топологических пространствах.
+    \begin{mydef}[Непрерывное отображение]
+    Пусть $(X,\, \mathcal{T}_X)$, $(Y,\, \mathcal{T}_Y)$ - топологические пространства, тогда отображение $f: X \to Y$ называется непрерывным, если
+    $\forall A \in \mathcal{T}_Y$ выполнено $f^{-1}(A) \in \mathcal{T}_X$ (прообраз открытого открыт).
+    \end{mydef}
+    http://mech.math.msu.su/~asmish/lecture03.pdf
+    
+\end{frame}
+
+\begin{frame}{Функция Распределения}
+    \begin{mydef}[Функция распределения]
+    Функция распределения с.в. $\xi$ это функция $F_\xi: \mathbb{R}\to\mathbb{R}$: $$F_\xi(x) = \mathbb{P}(\{\omega \in \Omega : \xi(\omega) \leq x\}) = \mathbb{P}\{\xi \le x\}$$
+    \end{mydef} %на доске доказательства свойств
+
+    \begin{properties}
+    \begin{enumerate}
+        \item $0 \leq F_\xi (x) \leq 1,\, \forall x \in \mathbb{R}$ 
+        \item $F_\xi (x) \leq F_\xi (y),$ если $x \leq y$
+        \item $\lim \limits_{x \rightarrow -\infty} F_\xi (x) = 0$ и $\lim \limits_{x\rightarrow \infty} F_\xi (x) = 1$
+        \item $F_\xi (x) = \lim \limits_{h \rightarrow 0 +} F_\xi (x + h)$
+    \end{enumerate}
+    \end{properties}
+    
+    Последнее свойство называется непрерывностью справа. В дальнейшем будем предполагать именно её.
+    
+    
+\end{frame}
+
+\begin{frame}{Точки разрыва}
+    \begin{mydef}[Скачок $F_\xi$]
+    Скачком функции $F_\xi$ в точке $a \in \mathbb{R}$ называется разность $F_\xi (a) - F_\xi (a-0)$.
+    \end{mydef}
+
+Вопрос: чему равна величина этого скачка? (Подумайте над этим в рамках 4-й задачи)
+
+\begin{proposition}
+    Ненулевые скачки функции $F_\xi$ образуют счетное множество.
+\end{proposition}
+
+\end{frame}
+
+\begin{frame}{Существование вероятностной меры}
+\begin{proposition}
+    Пусть функция $F$ удовлетворяет всем свойствам функции распределения, тогда существует вероятностная мера $\nu$ на $(\mathbb{R},\, \mathcal{B}(\mathbb{R}))$ такая, что $F(x) = \nu ((-\infty,\, x]) \; \forall x\in \mathbb{R}$. Более того, такая мера единственна.
+\end{proposition}
+Следствие без доказательства:
+\begin{enumerate}
+    \item $\nu ((-\infty,\, a)) = F(a-)$
+    \item $\nu ((a,\, b]) = F(b) - F(a+)$
+    \item $\nu ((a,\, b)) = F(b-) - F(a+)$
+    \item $\nu ([a,\, b)) = F(b-) - F(a-)$
+    \item $\nu ([a,\, b]) = F(b) - F(a-)$
+\end{enumerate}
+Мера, связанная таким образом с $F$ называется мерой Лебега-Стилтьеса.
+\end{frame}
+
+\begin{frame}{Мера Лебега и существование с.в.}
+
+В частности, если $F(x) = x \mathbb{I}_{\{x \in [0,\, 1]\}} + \mathbb{I}_{\{x > 1\}}$, тогда completed мера, порожденная данной $F$ называется мерой Лебега на $[0,\, 1]$.\\
+Для этой $F$ мы имеем:
+\begin{enumerate}
+    \item $\nu ((-\infty,\, 0]) = F(0) = 0$,
+    \item $\nu ((1,\, \infty)) = 1 - F(1) = 0$,
+    \item $\nu ((a,\, b)) = \nu ([a,\, b)) = \nu ((a,\, b]) = \nu ([a,\, b]) = b - a\\
+    (0 \le a \le b \le 1)$.
+\end{enumerate}
+То есть мера Лебега это просто "длина".
+
+\begin{proposition}
+    Пусть функция $F$ удовлетворяет всем свойствам функции распределения, тогда существует случайная величина $\xi$ такая, что $F=F_{\xi}$.
+\end{proposition}
+
+\end{frame}
+
+\begin{frame}{Функция ограниченной вариации}
+Прежде чем перейти к рассмотрению интеграла Римана-Стилтьеса, необходимо определить понятие функции с ограниченной вариацией.
+\begin{mydef}[вариация]
+    Вариацией функции $F(x)$ на отрезке $[a, b]$ называется $\bigvee_\tau (F) = \sum \limits_{i=1}^{n} |F(x_i) - F(x_{i-1})|$, при заданном разбиении $\tau$.
+\end{mydef}
+
+\begin{mydef}[полная вариация]
+    Полной вариацией функции $F(x)$ на отрезке $[a, b]$ называется $\bigvee \limits_{a}^{b} (F) = \sup \limits_{\tau} \bigvee_\tau (F)$.
+\end{mydef}
+
+\end{frame}
+
+\begin{frame}{Функция ограниченной вариации}
+Заметим, что для монотонно неубывающих функций $\bigvee \limits_{a}^{b} (F) = F(b) - F(a)$, а для монотонно невозрастающих $\bigvee \limits_{a}^{b} (F) = |F(b) - F(a)|$.
+
+\begin{proposition}
+    Произвольную функцию ограниченной вариации $F(x)$, можно представить в виде разности двух монотонно неубывающих функций.
+\end{proposition}
+\end{frame}
+
+\begin{frame}{Интеграл Римана-Стилтьеса}
+Эта часть посвящена обобщению Интеграла Римана, которое позволит нам интегрировать некоторые разрывные функции.
+\begin{mydef}[]
+    Пусть в интервале $(a, b)$ определены две функции: $g(x)$ (интегрируемая) и $F(x)$ (интегрирующая), причем $F(x)$ не убывает и является функцией с ограниченной вариацией. Пусть также интервал $(a, b)$ разбит на конечное число частичных интервалов $a=x_0 < x_1 < ... < x_n = b$. Тогда интегралом Стилтьеса будет называться предел $\lim \limits_{n \rightarrow \infty} \sum \limits_{i=1}^{n} g(\bar x_i) [F(x_i) - F(x_{i-1})] = \int \limits_{a}^{b} g(x) dF(x)$.
+\end{mydef}
+
+\end{frame}
+
+\begin{frame}{Интеграл Римана-Стилтьеса}
+Важно отметить, что в данном определении не накладывается иных требований к функции $F(x)$, кроме ограниченной вариации (требование о неубывании можно отбросить). В то время, как для интегрируемости по Риману нам было бы необходимо, чтобы $F(x) \in C^{(1)}[a, b]$. В таком случае справедливо следующее равенство $\int \limits_{a}^{b} g(x) dF(x) = \int \limits_{a}^{b} g(x) F'(x) dx$
+
+\begin{proposition}
+    Интеграл Римана-Стилтьеса по интервалу, сводящемуся к одной точке $(a - 0, a + 0)$ может быть отличен от нуля. 
+\end{proposition}
+\end{frame}
+
+\begin{frame}
+Полезные применения в Теории Вероятностей:
+
+\begin{enumerate}
+    \item $E(g(X)) = \int \limits_{-\infty}^{+\infty} g(x)dF(x)$
+    \item Распределение двух независимых случайных величин $F(x) = \int F_1(x - z)dF_2(z) = \int F_2(x - z)dF_1(z)$
+    \item Распределение частного $\xi_1/\xi_2$: $F(x) = \int \limits_{0}^{+\infty} F_1(xz)dF_2(z) + \int \limits_{-\infty}^{0} [1 - F_1(xz)]dF_2(z)$
+\end{enumerate}
+  
+\end{frame}
+\begin{frame}{Ссылки}
+
+\begin{enumerate}
+    \item Measure, Integration \& Probability, Ivan F Wilde;
+    \item http://mech.math.msu.su/~asmish/lecture03.pdf;
+    \item http://math.phys.msu.ru/data/129/FANII.pdf;
+\end{enumerate}
+
+\end{frame}
+
+\end{document}

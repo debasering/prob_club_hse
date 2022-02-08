@@ -1,0 +1,112 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{comment} 
+\usepackage{lipsum} 
+\usepackage{fullpage} 
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{setspace}
+\onehalfspacing % полуторный интервал для всего текста
+
+\usepackage[fleqn]{amsmath}
+\usepackage{mathtools,amsmath}
+\usepackage{amssymb,amsthm} % assumes amsmath package installed
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows,calc,positioning}
+\tikzset{
+	block/.style = {draw, rectangle,
+		minimum height=1cm,
+		minimum width=1.5cm},
+	input/.style = {coordinate,node distance=1cm},
+	output/.style = {coordinate,node distance=4cm},
+	arrow/.style={draw, -latex,node distance=2cm},
+	pinstyle/.style = {pin edge={latex-, black,node distance=2cm}},
+	sum/.style = {draw, circle, node distance=1cm},
+}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+%% Работа с языком
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{width=9cm, height=5cm, compat=1.9}
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\newenvironment{problem}[2][Задача]
+{ \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+	{ \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}
+{\textit{Решение:}}
+{}
+\renewcommand{\qed}{\quad\qedsymbol}
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+\title{Задачи для Клуба теории вероятностей ФЭН ВШЭ}
+\author{Александр Плахин, Николай Аверьянов}
+\date{25 сентября 2021}
+
+\begin{document}
+
+\maketitle
+
+\section*{Задача 1}
+Докажите следующее утверждение:
+$$
+\int_{[0, 1]}f d\mu = \inf_{\varphi \geq f} \int_{[0, 1]} f d\mu, 
+$$
+где инфимум берется по простым функция $\varphi$. На какое утверждение связанное с интегралом Римана похож данный факт? 
+
+\section*{Задача 2}
+Будем говорить, что $f \sim g$ относительно меры $\mu$, если $\mu(\{x: f(x) = g(x)\}) = 0$. 
+\begin{enumerate}
+    \item Покажите, что $\sim$ -- отношение эквивалентности.
+    \item Докажите, что если $f \sim g$, то 
+    $$
+    \int_E f d\mu = \int_E g d\mu, \; \forall E \in \Sigma
+    $$
+\end{enumerate}
+
+\section*{Задача 3} 
+
+Докажите, что функция Дирихле $D(x)$ не интегрируема по Риману, но интегрируема относительно меры Лебега. Напомним, что 
+$$
+D(x) = \begin{cases}
+1, x \in \mathbb{Q} \\
+0, x \in \R \textbackslash \mathbb{Q}
+\end{cases}
+$$
+
+\section*{Задача 4}
+Вычислите следующий предел, воспользовавшись теоремой Лебега о мажорируемой сходимости:
+$$
+\lim_{n \to \infty} \int_{0}^{\infty} \cfrac{\ln(nx)}{x+x^2\ln n}dx 
+$$
+
+\end{document}

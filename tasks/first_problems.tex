@@ -1,0 +1,123 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{comment} 
+\usepackage{lipsum} 
+\usepackage{fullpage} 
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{setspace}
+\onehalfspacing % полуторный интервал для всего текста
+
+\usepackage[fleqn]{amsmath}
+\usepackage{mathtools,amsmath}
+\usepackage{amssymb,amsthm} % assumes amsmath package installed
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows,calc,positioning}
+\tikzset{
+	block/.style = {draw, rectangle,
+		minimum height=1cm,
+		minimum width=1.5cm},
+	input/.style = {coordinate,node distance=1cm},
+	output/.style = {coordinate,node distance=4cm},
+	arrow/.style={draw, -latex,node distance=2cm},
+	pinstyle/.style = {pin edge={latex-, black,node distance=2cm}},
+	sum/.style = {draw, circle, node distance=1cm},
+}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+%% Работа с языком
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{width=9cm, height=5cm, compat=1.9}
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\newenvironment{problem}[2][Задача]
+{ \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+	{ \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}
+{\textit{Решение:}}
+{}
+\renewcommand{\qed}{\quad\qedsymbol}
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+\title{Задачи для Клуба теории вероятностей ФЭН ВШЭ}
+\author{Николай Аверьянов}
+\date{9 сентября 2021}
+
+\begin{document}
+
+\maketitle
+
+\section*{Задача 1}
+Доказать, что если $F(x)$ -- функция распределения, то при любом $h \neq 0$ функции
+
+$$
+\Phi(x) = \frac{1}{h} \int \limits_{x}^{x+h} F(t) dt, \;\;\;\; \Psi(x) = \frac{1}{2h} \int \limits_{x-h}^{x+h} F(t)dt
+$$
+
+также являются функциями распределения.
+
+\section*{Задача 2}
+Пусть $\alpha(x) = x + [x]$, где квадратные скобки означают взятие целой части числа. Вычислите следуюший интеграл:
+
+$$
+\int \limits_0^{10} x d\alpha(x)
+$$
+
+\section*{Задача 3} 
+Функции распределения $F_1(x)$ и $F_2(x)$ удовлетворяют условию 
+
+$$
+F_1(x) \leq F_2(x) \; \forall x.
+$$
+
+Показать, что можно так задать на одном вероятностном пространстве случайные величины $\xi_1$ и $\xi_2$ с функциями распределения $F_1(x)$ и $F_2(x)$ соответственно, что
+
+$$
+\P \{\xi_1 \geq \xi_2\} = 1
+$$
+
+\section*{Задача 4}
+Покажите, что функция распределения $F_{\xi}(x)$ непрерывна в точке $x=x_0$ тогда и только тогда, когда $\P\{\xi = x_0\} = 0$
+
+
+\section*{Задача 5}
+Доказать, что любая функция распределения обладает следующими свойствами:
+
+$$
+\lim_{x \to \infty} x \int \limits_{x}^{\infty} \frac{1}{z} dF(z) = 0, \;\;\;\; \lim_{x \to +0} x  \int \limits_{x}^{\infty} \frac{1}{z} dF(z) = 0, 
+$$
+
+$$
+\lim_{x \to -\infty} x \int \limits_{-\infty}^{x} \frac{1}{z} dF(z) = 0, \;\;\;\; \lim_{x \to -0} x  \int \limits_{-\infty}^{x} \frac{1}{z} dF(z) = 0, 
+$$
+
+\end{document}

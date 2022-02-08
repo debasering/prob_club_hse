@@ -1,0 +1,292 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage{graphicx}
+
+\theoremstyle{definition}
+\newtheorem{mydef}[theorem]{Определение}
+\newtheorem{proposition}[theorem]{Утверждение}
+\newtheorem{remark}[theorem]{Замечание}
+\newtheorem{myexample}[theorem]{Пример}
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Введение в теорию меры}
+\author[А. Плахин, Н. Аверьянов]{А. Плахин, Н. Аверьянов}
+\institute[Клуб теории вероятностей]{Клуб теории вероятностей ФЭН ВШЭ}
+\date{30 августа 2021 г.}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+\newcommand\mytext{Введение в теорию меры}
+
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  \mytext 
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+
+
+
+\begin{document}  % начало презентации
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Мотивация}
+\begin{itemize}
+    \item Современная теория вероятностей полностью основывается на теории меры;
+    \item Для того, чтобы темы связанные со стохастикой излагались достаточно строго, мы должны их рассказывать, используя ряд понятий из теории меры;
+    \item Сегодняшний доклад ставит своей целью ввести слушателей в курс дела относительно базовых понятий из теории меры, которые будут релевантны для дальнейшего изучения вероятностных дисциплин;
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Алгебры}
+    Сигма-алгебры, с которыми мы работаем в теории вероятностей в качестве множества возможных событий, являются частным случаем более общей структуры: алгебры.
+    
+    \begin{mydef}[Алгебра]
+    Алгеброй $\mathcal{A}$ называется любая система подмножеств множества $X$, удовлетворяющая следующим условиям:
+    \begin{enumerate}
+        \item $\emptyset, X \in \mathcal{A}$;
+        \item $\forall A, B \in \mathcal{A} \Rightarrow A \cup B, A \cap B, A \textbackslash B \in \mathcal{A}$.
+    \end{enumerate}
+    \end{mydef}
+    
+    \begin{mydef}[$\sigma$-алгебра]
+    Алгебра $\mathcal{A}$ называется $\sigma$-алгеброй, если она замкнута относительно операции счетного объединения.
+    \end{mydef}
+    
+    %на доске стоит нарисовать альтернативное определение сигма-алгебры
+\end{frame}
+
+\begin{frame}{$\sigma$-алгебры}
+    \begin{mydef}[$\sigma$-алгебра, альтернативное]
+    $\sigma$-алгеброй $\Sigma$ называется любая система подмножеств $X$, удовлетворяющая условиям:
+    \begin{enumerate}
+        \item $X \in \Sigma$;
+        \item Если $A \in \Sigma$, то $A^c \in \Sigma$;
+        \item $\Sigma$ замкнута относительно счетного объединения.
+    \end{enumerate}
+    
+    Множества, принадлежащие $\Sigma$, называются измеримыми множествами, а пространство $(X, \Sigma)$ называется измеримым пространством.
+    
+    \end{mydef} %на доске доказательство эквивалентности двух определений
+    
+    
+    Отметим, что $\sigma$-алгебры замкнуты и относительно счетных пересечений. 
+    
+\end{frame}
+
+\begin{frame}{Пересечение $\sigma$-алгебр}
+
+Важным для дальнейших рассуждений является следующий факт:
+
+\begin{proposition}
+    Пусть дано некоторое семейство $\sigma$-алгебр на множестве $X$ $\{\Sigma_\alpha\}$, тогда $\bigcap_{\alpha} \Sigma_{\alpha}$ также будет являться $\sigma$-алгеброй. (доказательство на доске)
+    
+\end{proposition}
+
+Вопрос: будет ли любое объединение $\sigma$-алгебр также являться $\sigma$-алгеброй? 
+
+\begin{mydef}
+Пусть $Y$ -- некоторый набор подмножеств $X$. Обозначим за $\mathcal{F}$ семейство всех сигма-алгебр, содержащих внутри себя $Y$. Тогда 
+$$\Sigma(Y) = \bigcap_{\mathcal{F}} \Sigma$$
+будет минимальной $\sigma$-алгеброй, содержащей $Y$ (ее еще называют $\sigma$-алгеброй, порождаемой $Y$).
+\end{mydef}
+    
+\end{frame}
+
+
+\begin{frame}{Борелевская $\sigma$-алгебра}
+Для дальнейших рассуждений мы по техническим причинам будем оперировать с особым видом $\sigma$-алгебр.
+
+\begin{mydef}[Борелевская $\sigma$-алгебра]
+Обозначим за $\mathcal{C}$ множество всех открытых подмножеств $\mathbb{R}$. Тогда $\Sigma(\mathcal{C}) \equiv \mathcal{B}(\mathbb{R})$ будем называть борелевской $\sigma$-алгеброй. Множества, включенные в борелевскую $\sigma$-алгебру, будут называться борелевскими. 
+
+$\mathcal{B}(\mathbb{R}^n)$ определяется аналогичным образом.
+    
+\end{mydef}
+
+Отметим, что $\sigma$-алгебра, порожденная множеством всех закрытых подмножеств $\mathbb{R}$, также будет борелевской (более того, $\sigma$-алгебра, порожденная любой из совокупностей подмножеств в пунктах 1-9 следующего слайда будет борелевской).
+
+\end{frame}
+
+
+
+\begin{frame}{Борелевская $\sigma$-алгебра}
+Следующие типы подмножеств включены в $\mathcal{B}(\mathbb{R})$:
+\begin{enumerate}
+    \item $(a, b), \forall a < b;$
+    \item $(-\infty, a), \forall a \in \mathbb{R}$
+    \item $(a, \infty), \forall a \in \mathbb{R}$
+    \item $[a, b], \forall a < b;$
+    \item $(-\infty, a], \forall a \in \mathbb{R}$
+    \item $[a, \infty), \forall a \in \mathbb{R}$
+    \item $[a, b), \forall a < b;$
+    \item $(a, b], \forall a < b;$
+    \item Все закрытые подмножества $\mathbb{R}$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Почему именно борелевская $\sigma$-алгебра?}
+
+Вероятно, у многих возникает разумный вопрос: зачем нам понадобилось конструировать такую сложную структуру как сигма-алгебра (еще и борелевская)? Интуитивно, кажется возможным просто использование булеана 
+$2^{\mathbb{R}}$, но оказывается, что с точки зрения теории вероятностей существуют некоторые проблемы.
+
+\begin{itemize}
+
+    \item Мы действительно можем использовать булеан в случае, когда мощность нашего sample set не более, чем счетно (такой булеан будет являться $\sigma$-алгеброй). 
+    
+    \item Проблемы возникают с булеаном на множестве мощности континуум.
+    
+    \item Если мы используем в качестве вероятностной меры, например, отношение объемов, то мы не сможем аккуратно определить вероятность для некоторых множеств из-за их неизмеримости (см. парадокс Банаха-Тарского).
+\end{itemize}
+
+\end{frame}
+
+
+
+\begin{frame}{Измеримые функции}
+\begin{mydef}
+    Пусть $(X, \Sigma_X)$ и $(Y, \Sigma_Y)$ -- измеримые пространства, а $f: X \rightarrow Y$ некоторая функция. Функция $f$ называется измеримой, если $\forall B \in \Sigma_Y$ выполняется $f^{-1}(B) \in \Sigma_X$.
+\end{mydef}
+Замечание: вообще говоря, можно дать такое определение не только для измеримых пространств, а для множеств, на которых задана некоторая алгебра множеств.
+
+\;
+
+Если в роли обоих пространств в определении выступают $(\mathbb{R}, \mathcal{B}(\mathbb{R}))$, то функция $f$ называется борелевской.
+    
+\end{frame}
+
+\begin{frame}{Борелевские функции}
+Выпишем ряд полезных свойств борелевских функций:
+
+\begin{itemize}
+    \item Если $f$ - борелевская, а $g$ - непрерывная, то $g \circ f$ -- борелевская;
+    \item Теперь пусть $f$ и $g$ -- борелевские. Тогда $af + bg + c, (a, b, c) \in \mathbb{R}^3$ -- борелевская;
+    \item $|f|^{\alpha}, \alpha \geq 0$ -- борелевская;
+    \item Если $f$ не обращается в $0$, то $1/f$ -- борелевская.
+    \item $fg$ -- борелевская;
+    \item $\max\{f, g\}, \min\{f, g\}$ -- борелевские
+\end{itemize}
+
+
+
+
+
+\end{frame}
+
+\begin{frame}{Мера}
+
+\begin{mydef}[Мера]
+    Мерой на измеримом пространстве  $(X, \Sigma)$ называется такое отображение $\mu: \Sigma \rightarrow [0, \infty)$, что если $A_1, A_2, ...$ любая последовательность попарно непересекающихся элементов $\Sigma$, то:
+        \[\mu(\cup\limits_{n=1}^{\infty} A_n) = \sum\limits_{n=1}^{\infty}\mu(A_n)\]
+    
+    (это условие еще можно назвать счетная аддитивность или $\sigma$-аддитивность)
+\end{mydef}
+
+\begin{mydef}[Пространство с мерой]
+    Пространством с мерой называется тройка $(X, \Sigma, \mu)$, 
+    где $\mu$ это мера на $\sigma$-алгебре $\Sigma$ из подмножеств $X$
+    
+\end{mydef}
+
+\end{frame}
+
+\begin{frame}{Мера}
+
+Замечание: если $\mu(X) = 1$, то $\mu$ называется вероятностной мерой и $(X, \Sigma, \mu)$ называется вероятностным пространством.  $X$ в данном случае будет пространством элементарных событий и элементы $\Sigma$ называются событиями
+
+\begin{proposition}
+Пусть $\mu$ мера на $\Sigma$. Тогда верно следующее:
+    \begin{enumerate}
+        \item $\mu(\emptyset) = 0$
+        \item Если $A_1,...,A_N \in \Sigma$ и $A_i \cap A_j =         \emptyset$ для $i \neq j$, тогда:
+            $\mu(A_1 \cup A_2 \cup ... \cup A_n) = \mu(A_1) + \mu(A_2) + ... + \mu(A_n)$
+        \item Если $A, B \in \Sigma$ и $A \subseteq B$, то $\mu(A) \leq \mu(B)$
+        \item Если $A_1 \subseteq A_2 \subseteq ...$ и $A_n$, $n = 1,2,...$, тогда мы имеем $\mu(A_n) \uparrow \mu(\cup\limits_{m}A_m)$ при $n \rightarrow \infty$
+        \item Если $A_1 \supseteq A_2 \supseteq ...$ и $A_n$, $n = 1,2,...$, тогда мы имеем $\mu(A_n) \downarrow \mu(\cap\limits_{m}A_m)$ при $n \rightarrow \infty$
+    \end{enumerate}
+\end{proposition}
+    
+\end{frame}
+
+\begin{frame}{Мера}
+    \begin{proposition}
+        Пусть $\mu: \Sigma \rightarrow [0, \infty)$ и $\mu(A \cup B) = \mu(A) + \mu(B)$, когда $A, B \in \Sigma$ и $A \cap B = \emptyset$ (это значит, что $\mu$ конечно-аддитивная мера). Тогда $\mu$ $\sigma$-аддитивная мера тогда и только тогда, когда $\mu(E_n) \downarrow 0$ для любой последовательности ($E_n$) из $\Sigma$ при условии, что $E_1 \supseteq E_2 \supseteq ...$ и $\cap_{n} E_n = \emptyset$
+    \end{proposition}
+    \begin{myexample}
+        Пусть $X$ это счетное множество (скажем $X = \{x_1, x_2, ...\}$ с $\sigma$-алгеброй $\Sigma$, содержащей все подмножества $X$). Пусть ($p_n$) любая последовательность неотрицательных действительных чисел с конечной суммой $\sum_n p_n$. Если мы определим $\mu(A)$ для любого множества $A \in \Sigma$, как $\mu(A) = \sum_{n \in I} p_n$ (где $I = {i: x_i \in A})$, тогда $\mu$ это мера на $(X, \Sigma)$
+    \end{myexample}
+\end{frame}
+
+\begin{frame}{Продолжение меры}
+    \begin{myexample}[мотивирующий]
+        Предположим, что у нас есть пространство с мерой $(X, \Sigma, \mu)$ и множество $A \in \Sigma$ такое, что $\mu(A) = 0$. Пусть $C \subset A$. Тогда из $\mu(A) = 0$ следует $\mu(C) = 0$. Однако, это работает только в случае, когда $C \in \Sigma$. В ином случае $\mu(C)$ неопределено. Можно либо принять эту странную на интуитивном уровне ситуацию, либо попытаться как-то эту штуку довести до определенности. Мы приходим таким образом к процедуре продолжение меры.
+    \end{myexample}
+\end{frame}
+
+\begin{frame}{Продолжение меры}
+    Давайте за $\Sigma'$ обозначать набор подмножеств $X$, которые удовлетворяют следующему условию: $E \in \Sigma'$ тогда и только тогда, когда существуют такие множества $A, B \in \Sigma$, что $A \subseteq E \subseteq B$ и $\mu(B \textbackslash A) = 0$ (это равносильно условию $\mu(A) = \mu(B)$). Из этого следует, что $\Sigma \subseteq \Sigma'$.
+    \begin{proposition}
+        $\Sigma'$ is $\sigma$-алгебра
+    \end{proposition}
+    Теперь нужно подумать, как мы можем сконструировать меру $\mu'$ на $\Sigma'$. Достаточно интуитивно будет доопределить $\mu'$ следующим образом: $\mu'(E) = \mu(A) = \mu(B) $. Оказывается, что значение $\mu'(E)$ не зависит от выбора $A$ и $B$.
+\end{frame}
+
+\begin{frame}{Продолжение меры}
+    \begin{proposition}
+        $\mu'$ является продолжением $\mu$ на $\Sigma$ до меры на $\Sigma'$, то есть $\mu'$ мера на $\Sigma'$ и $\mu'(A) = \mu(A)$ для всех $A \in \Sigma$
+    \end{proposition}
+    \begin{mydef}
+        Пространство с мерой $(X, \Sigma', \mu')$ называется продолжением пространства $(X, \Sigma, \mu)$
+    \end{mydef}
+    \begin{mydef}
+        Пространство с мерой $(X, \Sigma, \mu)$ называется полным (complete) если из $E \subseteq A$ (где $A \in \Sigma$) и $\mu(A) = 0$ следует, что $E \in \Sigma$
+    \end{mydef}
+    
+\end{frame}
+
+ 
+
+
+
+
+
+
+
+
+
+
+\begin{frame}{Литература}
+
+
+\begin{enumerate}
+    \item Measure, Integration \& Probability, Ivan F Wilde;
+    \item Measure and Integration MIT course;
+    \item Лекции по теории вероятностей МФ ВШЭ;
+    \item Незаконченный учебник по стохастическому анализу Б. Б. Демешева :)
+\end{enumerate}
+
+
+\end{frame}
+\end{document}

@@ -1,0 +1,215 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage{graphicx}
+
+\theoremstyle{definition}
+\newtheorem{mydef}[theorem]{Определение}
+\newtheorem{proposition}[theorem]{Утверждение}
+\newtheorem{remark}[theorem]{Замечание}
+\newtheorem{myexample}[theorem]{Пример}
+\newtheorem{mycol}[theorem]{Следствие}
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Интеграл Лебега}
+\author[А. Плахин, Н. Аверьянов]{А. Плахин, Н. Аверьянов}
+\institute[Клуб теории вероятностей]{Клуб теории вероятностей ФЭН ВШЭ}
+\date{25 сентября 2021}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+\newcommand\mytext{Интеграл Лебега}
+
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  \mytext 
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+\DeclareMathOperator{\sup}{sup}
+
+
+
+
+
+\begin{document}  % начало презентации
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}{Мотивация}
+\begin{quote} Интеграл Римана, этот противоестественный кусок тошнотворной 
+математической архаики, идет на помойку истории, 
+а интегрирование выносится в отдельный курс
+"теории меры". Для многих прикладных задач интеграл
+Лебега - это, конечно, перебор, но тут достаточно
+школярского определения интеграла как площади под 
+графиком, вполне уместного в курсе "математического 
+анализа для студентов ПТУ
+\end{quote}
+\flushright Миша Вербицкий
+\end{frame}
+
+\begin{frame}{Recap}
+    $(X, \Sigma, \mu)$ -- пространство с мерой
+
+\begin{itemize}
+    \item $X$ -- некоторое множество произвольной природы
+    \item $\Sigma$ -- сигма-алгебра на множестве $X$
+    \item $\mu: \Sigma \to [0, \infty]$ -- мера (функция обладающая некоторыми свойствами)
+\end{itemize}
+
+Равномерная сходимость: $\lim_{n \to \infty} \sup|f_n - f| = 0$
+\end{frame}
+
+\begin{frame}{Интеграл Лебега для простых функций}
+Наша цель -- определить интеграл на произвольном измеримом пространстве $(X, \Sigma, \mu)$. Назовем функцию $s$ простой (и измеримой), если  
+$s(x) = \sum_{i=1}^n \alpha_i \mathbb{I}_{A_i}$. Для начала определим понятие интеграла именно для таких функций.
+
+\begin{mydef}
+Пусть $s(x) = \sum_{i=1}^n \alpha_i \mathbb{I}_{A_i}$ -- простая функция. Тогда интегралом данной функции по множеству $E \in \Sigma$ будет называть следующую величину:
+$$
+\int_E sd\mu = \sum_{i=1}^n \alpha_i \mu(A_i \cap E) 
+$$
+\end{mydef}
+
+\begin{myexample}
+$$\int_X \mathbb{I}_{A} d\mu = \mu(A)$$
+\end{myexample}
+
+\end{frame}
+
+\begin{frame}{Интеграл Лебега от измеримой функции}
+    \begin{mydef}
+    Пусть $f: X \to \mathbb{R}$ -- некоторая неотрицательная измеримая функция, а $E \in \Sigma$. Тогда интегралом от нашей функции будем называть:
+    $$
+    \int_E f d\mu = \sup \int_E s d\mu
+    $$
+    \end{mydef}
+    Супремум берется по всем простым функциям $s$, таким что $0 \leq s(x) \leq f(x), \forall x \in X$
+\end{frame}
+
+\begin{frame}{Свойства интеграла}
+\begin{enumerate}
+    \item $0 \leq f \leq g \Rightarrow \int_E f d\mu \leq \int_E g d\mu$
+    
+    \;
+    
+    \item $A \subseteq B; A, B \in \Sigma; f \geq 0 \Rightarrow 
+    \int_A f d\mu \leq \int_B f d\mu$
+    
+    \;
+    
+    \item $f \geq 0; c \geq 0 \Rightarrow \int_E cf d\mu = c\int_E f d\mu$
+    
+    \;
+    
+    \item $f(x) = 0 \; \forall x \in E \Rightarrow \int_E fd\mu = 0$
+    
+    \;
+    
+    \item $\mu(E) = 0 \Rightarrow \int_E f d\mu = 0 \; \forall f \geq 0$
+    
+    \;
+    
+    \item $f \geq 0 \Rightarrow \int_E f d \mu = \int_X \mathbb{I}_E f d \mu$
+\end{enumerate}
+    
+\end{frame}
+
+\begin{frame}{Линейность}
+
+\begin{proposition}
+Пусть $s$ и $t$ это две простые функции $s \geq 0$ и $t \geq 0$. Для $E \in \Sigma$ зададим функцию $\varphi(E) = \int_E s d\mu$. Тогда $\varphi$ -- мера на $(X, \Sigma)$ и более того:
+$$
+\int_X (s+t)d\mu = \int_X s d\mu + \int_X t d\mu
+$$
+\end{proposition}
+
+Доказательство первого факта достаточно тривиально:
+$$
+\varphi(E) = \int_E s d\mu = \sum_{i=1}^n  \alpha_i \mu (A_i \cap E)
+$$
+Каждое отображение $E \mapsto \mu(A_i \cap E)$ будет мерой, как их сумма.
+
+\end{frame}
+
+
+\begin{frame}{Lebesgue’s Monotone Convergence Theorem   }
+\begin{proposition}
+Пусть $f_n$ это последовательность измеримых функций на $X$, и предположим, что:
+    \begin{enumerate}
+        \item $0 \leq f_1(x) \leq f_2(x) \leq ...$ for each $x \in X$
+        \item $f_n(x) \rightarrow f(x)$ as $n \rightarrow \infty$, for each $x \in X$
+    \end{enumerate}
+Tогда $f $  измеримая и $\int_{X} f_{n} d\mu \rightarrow \int_{X} f d \mu$ при $n \rightarrow \infty$
+\end{proposition}
+
+\begin{mycol}
+    Предположим, что $f \geq 0$, $g \geq 0$ и каждая из этих функций является интегрируемой. Тогда $f + g$ интегрируема и:
+    
+    \[\int_{X} (f + g) d\mu = \int_{X} f d\mu + \int_{X} g d\mu \] 
+\end{mycol}
+
+\end{frame}
+
+\begin{frame}{Fun facts}
+\begin{mycol}
+    Предположим, что функция $f \geq 0 $ интегрируема. Тогда
+    отображаение $\varphi: E \rightarrow \int_{E} f d\mu$ является мерой на $(X, \Sigma)$
+\end{mycol}
+
+\begin{mydef}
+    Комплекснозначная функция $f$ на $X$ называется интегрируемой (по Лебегу) по мере $\mu$, если $|f|$ интегрируема. Множество всех таких функций обозначается $\mathcal{L}^1(X, \mu)$. Для $f = u + iv \in \mathcal{L}^1(X, \mu)$, определим:
+    \[\int_X fd\mu  = \int_X u_+d\mu -\int_X u_-d\mu + i\int_X v_+d\mu - i\int_X v_-d\mu\]
+\end{mydef}
+
+
+\end{frame}
+
+\begin{frame}{Fun facts}
+\begin{proposition}
+     If $f,g \in \mathcal{L}^1(X,\mu)$ and $a, b \in \mathbb{C}$, then $af +bg \in  \mathcal{L}^1(X,\mu)$ and:
+    \[\int_{X} (af + bg) d\mu = a\int_{X} f d\mu + b\int_{X} g d\mu \]
+\end{proposition}
+
+    
+\begin{remark}
+The above result says that the space $\mathcal{L}^1(X,\mu)$ is a (complex) linear space.
+\end{remark}
+
+\begin{proposition}
+     For any $f \in \mathcal{L}^1(X,\mu)$:
+     \[\Big|\int_X fd\mu\Big| \leq \int_X |f|d\mu\]
+\end{proposition}
+\end{frame}
+
+\begin{frame}{Lebesgue’s Dominated Convergence Theorem}
+Let $f_n$ be a sequence of complex-valued measurable functions on $X$ such that
+\begin{enumerate}
+    \item $f_n(x) \rightarrow f(x)$, as $n \rightarrow \infty$, for every $x \in X$ (pointwise convergence);
+    \item here is some $g \in \mathcal{L}^1(X,\mu)$ such that $|f_n(x)| \leq g(x)$ for all $n \in N$
+and each $x \in X$ (the sequence $f_n$ is dominated by $g$).
+
+\end{enumerate}
+Then $ f \in \mathcal{L}^1(X,\mu)$ and $\int_X f_n d\mu \rightarrow \int_X f d\mu$ as $n \rightarrow \infty$. Furthermore, $\int_X |f_n - f| d\mu \rightarrow 0$, as $n \rightarrow \infty$
+
+    
+\end{frame}
+
+\end{document}

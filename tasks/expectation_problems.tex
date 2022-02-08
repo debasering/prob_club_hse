@@ -1,0 +1,119 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{comment} 
+\usepackage{lipsum} 
+\usepackage{fullpage} 
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{setspace}
+\onehalfspacing % полуторный интервал для всего текста
+
+\usepackage[fleqn]{amsmath}
+\usepackage{mathtools,amsmath}
+\usepackage{amssymb,amsthm} % assumes amsmath package installed
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows,calc,positioning}
+\tikzset{
+	block/.style = {draw, rectangle,
+		minimum height=1cm,
+		minimum width=1.5cm},
+	input/.style = {coordinate,node distance=1cm},
+	output/.style = {coordinate,node distance=4cm},
+	arrow/.style={draw, -latex,node distance=2cm},
+	pinstyle/.style = {pin edge={latex-, black,node distance=2cm}},
+	sum/.style = {draw, circle, node distance=1cm},
+}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+%% Работа с языком
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{width=9cm, height=5cm, compat=1.9}
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\newenvironment{problem}[2][Задача]
+{ \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+	{ \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}
+{\textit{Решение:}}
+{}
+\renewcommand{\qed}{\quad\qedsymbol}
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+\title{Задачи для Клуба теории вероятностей ФЭН ВШЭ}
+\author{Александр Плахин, Николай Аверьянов}
+\date{9 октября 2021}
+
+\begin{document}
+
+\maketitle
+
+\section*{Задача 1}
+$X \sim \mathcal{N}(\mu, \sigma^2)$, $g$ -- некоторая дифференцируемая функция. Докажите следующее соотношение (если обе части определены):
+$$
+\E[(X-\mu)g(X)] = \sigma^2\E[g'(X)]
+$$
+
+
+\section*{Задача 2}
+
+$X$ -- случайная величина с математическим ожиданием $\mu$ и функцией распределения $F$.
+\begin{enumerate}
+    \item Покажите, что
+    $$
+    \int_0^{\infty} (1-F(x))dx - \int_{-\infty}^0 F(x)dx = \mu
+    $$
+\item Покажите, что 
+$$
+\int_{-\infty}^a F(x)dx = \int_a^{\infty} (1-F(x))dx \iff a = \mu.
+$$
+
+\end{enumerate}
+
+\section*{Задача 3}
+На бесконечный лист клетчатой бумаги (сторона клеточки равна $1$) случайно бросается круг единичного радиуса. Считая, что центр круга равномерно распределен на том единичном квадрате, на который он попал, найти математическое ожидание числа точек с целочисленными координатами $(x, \; y)$, покрытых этим кругом.
+
+
+\section*{Задача 4}
+
+\begin{enumerate}
+    \item Пусть $X$ -- случайная величина такая, что $\E[X] = 0$, $\Var[X] = \sigma^2 < \infty$. Докажите, что 
+    $$
+    \P\{X \geq a\} \leq \cfrac{\sigma^2}{\sigma^2 + a^2}, \; a > 0
+    $$
+    \item Теперь предположим, что $X$ -- нестрого положительная случайная величина с конечным вторым моментом. Докажите, что
+    $$
+    \P\{X > a\} \geq \cfrac{(\E[X])^2}{\E[X^2]}
+    $$
+\end{enumerate}
+
+
+\end{document}

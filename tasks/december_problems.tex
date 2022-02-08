@@ -1,0 +1,108 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{comment} 
+\usepackage{lipsum} 
+\usepackage{fullpage} 
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{setspace}
+\onehalfspacing % полуторный интервал для всего текста
+
+\usepackage[fleqn]{amsmath}
+\usepackage{mathtools,amsmath}
+\usepackage{amssymb,amsthm} % assumes amsmath package installed
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows,calc,positioning}
+\tikzset{
+	block/.style = {draw, rectangle,
+		minimum height=1cm,
+		minimum width=1.5cm},
+	input/.style = {coordinate,node distance=1cm},
+	output/.style = {coordinate,node distance=4cm},
+	arrow/.style={draw, -latex,node distance=2cm},
+	pinstyle/.style = {pin edge={latex-, black,node distance=2cm}},
+	sum/.style = {draw, circle, node distance=1cm},
+}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+%% Работа с языком
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{width=9cm, height=5cm, compat=1.9}
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\newenvironment{problem}[2][Задача]
+{ \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+	{ \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}
+{\textit{Решение:}}
+{}
+\renewcommand{\qed}{\quad\qedsymbol}
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+\title{Задачи для Клуба теории вероятностей ФЭН ВШЭ}
+\author{Александр Плахин, Николай Аверьянов}
+\date{4 декабря 2021}
+
+\begin{document}
+
+\maketitle
+
+\section*{Задача 1}
+
+\begin{itemize}
+    \item Пусть $X$ и $Y$ имееют совместную плотность $f$. Найдите плотность $Y/X$.
+    \item Пусть теперь $X$ и $Y$ независимы и одинаково распределены с плотностью $f$. Покажите, то $\arctan(Y/X)$ имеет равномерное распределение на $(-\frac{1}{2}\pi, \frac{1}{2}\pi)$ тогда и только тогда, когда:
+    $$
+    \int_{-\infty}^{\infty} f(x)f(xy)|x|dx = \cfrac{1}{\pi(1+y^2)}
+    $$
+\end{itemize}
+
+\section*{Задача 2}
+Четыре точки выбираются равновероятно внутри треугольника. Найти вероятность того, что ни одна точка не лежит внутри треугольника, образованного тремя остальными точками.
+
+\section*{Задача 3}
+Последовательность точек $\xi_1, \xi_2, \ldots$ на отрезке $[0, 1]$ строится по следующему правилу: $\xi_1 \sim U[0, 1]$, и если значения $\xi_1, \ldots, \xi_{k-1} \; (k \geq 2)$  определены, то точка $\xi_k$ имеет равномерное распределение на минимальном по длине из $k$ отрезков, на которые $[0, 1]$ разбивается точками $\xi_1, \ldots, \xi_{k-1}$.
+
+\begin{itemize}
+    \item Доказать, что существует случайная величина $\xi$, удовлетворяющая условию: 
+    $$
+    \P(\{\lim_{n \to \infty} \xi_n = \xi \}) = 1
+    $$
+    \item Найти $\E \xi, \; \Var \xi.$
+\end{itemize}
+
+
+\section*{Задача 4}
+Предположим, что абсолютно непрерывное распределение вероятности скалярной случайной величины $X$ обладает следующим свойством: плотность совместного распределения набора $n$ независимых случайных величин, распределенных по такому же закону, зависит только от радиальной координаты $\sqrt{\sum_i x_i^2}$. Показать, что распределение $X$ нормально (точнее, гауссово с нулевым математическим ожиданием).
+
+
+\end{document}
