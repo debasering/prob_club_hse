@@ -1,0 +1,117 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{comment} 
+\usepackage{lipsum} 
+\usepackage{fullpage} 
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{setspace}
+\onehalfspacing % полуторный интервал для всего текста
+
+\usepackage[fleqn]{amsmath}
+\usepackage{mathtools,amsmath}
+\usepackage{amssymb,amsthm} % assumes amsmath package installed
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows,calc,positioning}
+\tikzset{
+	block/.style = {draw, rectangle,
+		minimum height=1cm,
+		minimum width=1.5cm},
+	input/.style = {coordinate,node distance=1cm},
+	output/.style = {coordinate,node distance=4cm},
+	arrow/.style={draw, -latex,node distance=2cm},
+	pinstyle/.style = {pin edge={latex-, black,node distance=2cm}},
+	sum/.style = {draw, circle, node distance=1cm},
+}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+%% Работа с языком
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{width=9cm, height=5cm, compat=1.9}
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\newenvironment{problem}[2][Задача]
+{ \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+	{ \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}
+{\textit{Решение:}}
+{}
+\renewcommand{\qed}{\quad\qedsymbol}
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+\title{Задачи для Клуба теории вероятностей ФЭН ВШЭ}
+\author{Саша Плахин, Коля Аверьянов}
+\date{18 февраля 2021}
+
+\begin{document}
+
+\maketitle
+
+
+\section*{Задача 1}
+\begin{itemize}
+    \item Доказать, что если $X \geq 0$ и $\E X = 0$, то $X = 0$ почти наверное.
+    \item Доказать, что если $\Var X = 0$, то $X$ почти наверное константа.
+\end{itemize}
+
+
+\section*{Задача 2}
+Пусть $\{X_n: n \geq 1\}$ -- последовательность независимых экспоненциальных случайных величин с параметром $\lambda = 1$. Докажите:
+$$
+\P\bigg(\bigg\{\limsup_{n \to \infty} \cfrac{X_n}{\log n} = 1  \bigg\}\bigg) = 1.
+$$
+
+\section*{Задача 3}
+
+Пусть $\{X_r, r \geq 1\}$
+независимые пуассоновские случайные величины с параметрами $\{\lambda_r, r \geq 1\}$. Нужно показать, что $\sum_{r=1}^{\infty}X_r$сходится или расходится почти наверное в соответсвии с тем сходится или расходится
+ $\sum_{r=1}^{\infty} \lambda_r$.
+
+\section*{Задача 4}
+\begin{itemize}
+    \item Докажите, что из сходимости в среднем порядка $r$ следует сходимость в среднем порядка $r - k$, $k \in \{1, \ldots, r-1\}$
+    \item Докажите, что из сходимости в среднем следует сходимость по вероятности
+    \item Докажите, что $X_n \to 0$ по вероятности тогда и только тогда, когда:
+    $$
+    \lim_{n \to \infty} \E \bigg( \cfrac{|X_n|}{1+|X_n|}\bigg) = 0.
+    $$
+\end{itemize}
+
+
+\section*{Задача 5}
+Пусть $\xi_n \to \xi$ по распределению. $h(x)$ -- дважды дифференцируемая функция в вещественной точке $a$. Известно, что $h'(a) = 0$. Найдите предел сходимости по распределению у последовательности:
+$$
+\cfrac{h(a + \xi_n b_n) - h(a)}{b_n^2},
+$$
+где $b_n \to 0$ -- произвольная последовательность положительных чисел.
+
+\end{document}

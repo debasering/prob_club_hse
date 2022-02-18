@@ -1,0 +1,219 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage{graphicx}
+
+\theoremstyle{definition}
+\newtheorem{mytheor}[theorem]{Теорема}
+\newtheorem{mydef}[theorem]{Определение}
+\newtheorem{proposition}[theorem]{Утверждение}
+\newtheorem{remark}[theorem]{Замечание}
+\newtheorem{myexample}[theorem]{Пример}
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Сходимость случайных величин}
+\author[А. Плахин, Н. Аверьянов]{А. Плахин, Н. Аверьянов}
+\institute[Клуб теории вероятностей]{Клуб теории вероятностей ФЭН ВШЭ}
+\date{18 февраля 2022 г.}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+% \newcommand\mytext{Сходимость случайных величин}
+
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+
+
+
+\begin{document}  % начало презентации
+	
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Равенство почти наверное}
+
+\begin{mydef}[Равенство почти наверное]
+
+Будем говорить, что случайные величины $X$ и $Y$ равны почти наверное (a.s.), если $\P\big(\{ \omega \in \Omega: X(\omega) = Y(\omega)\}\big) = 1$
+
+\end{mydef}
+
+
+\begin{proposition}
+
+Пусть $\sim$ будет отношением, которое определено так: $X \sim Y$  тогда и только тогда, когда когда $X = Y$ a.s. Тогда $\sim$ это отношение эквивалентности на множестве случайных величин на  вероятностном прострарнстве.
+
+\end{proposition}
+
+Для доказательства этого факта потребуется следующее тривиальное заменчание. Если $A$ и $B$ такие события, что $\P(A) = \P(B) = 1$, то $\P(A \cap B) = 1$. [$0 \leq \P((A \cap B)^c) = \P(A^c \cup B^c) \leq \P(A^c) + \P( B^c) = 0$ ]
+
+\end{frame}
+
+
+\begin{frame}{Равенство почти наверное}
+
+\begin{proof}
+\begin{enumerate}
+    \item Очевидно, что $X \sim X$ и из того, что $X \sim Y$ следует, что $Y \sim X$.
+    
+    \item Предположим, что $X,Y,V$ такие случайные величины, что $X \sim Y$ и $Y \sim V$. Нужно показать, что $ X\sim V$. 
+    
+    Пусть $A = \{\omega: X(\omega) = Y(\omega)\}$ и $B = \{\omega: Y(\omega) = V(\omega)\}$.
+    
+    Также помним, что $\P(A) = \P(B) = 1$, поэтому $\P(A \cap B) = 1$. Очевидно, что $A \cap B \subseteq \{ \omega: X(\omega) = V(\omega)\}$, поэтому $P(\{\omega: X(\omega) = V(\omega)\}) = 1$,что завершает доказательство.
+\end{enumerate}
+\end{proof}
+
+\begin{remark}
+    В общем, свойство выполнено почти наверное, если событие не выполняется с вероятностью 0.
+\end{remark}
+\end{frame}
+
+\begin{frame}{Сходимости почти наверное}
+
+\begin{mydef}
+Последовательность случайных величин $(f_n)$ случайных величин сходится почти наверное к случайной величине $g$ если:
+
+\[\P(\{\omega: f_n(\omega) \rightarrow g(\omega), \text{ as } n \rightarrow \infty\}) = 1\]
+\end{mydef}
+
+\begin{proposition}
+Если $f_n \rightarrow f$ почти наверное при $n \rightarrow \infty$  и  $f_n \rightarrow g$ почти наверное при $n \rightarrow \infty$, то $f = g$ почти наверное.
+\end{proposition}  
+
+\begin{proof}
+    Пусть $A = \{\omega: f_n(\omega) \rightarrow f(\omega)\}$, $B = \{\omega: f_n(\omega) \rightarrow g(\omega)\}$ и $C = \{\omega: f(\omega) = g(\omega)\}$. Тогда $\P(A) = 1$ и $\P(B) = 1$ и тогда $P(A \cap B) = 1$. Но $A \cap B \subseteq C$, поэтому $\P(C) = 1$.
+\end{proof}
+
+
+\end{frame}
+
+
+\begin{frame}{Сходимость произведения}
+\begin{proposition}
+Предположим, что $f_n \rightarrow f$ почти наверное и $g_n \rightarrow g$ почти наверное. Тогда $f_n + g_n \rightarrow f + g$ почти наверное и $f_n g_n \rightarrow fg$ почти наверное.
+\end{proposition}
+
+\begin{proof}
+Пусть $A = \{\omega: f_n(\omega) \rightarrow f(\omega)\}$, $B = \{\omega: g_n(\omega) \rightarrow g(\omega)\}$. Тогда $\P(A) = \P(B) = 1$ и поэтому $\P(A \cap B) = 1$. Но каждое из множеств $\{\omega : f_n(\omega) + g_n(\omega) \rightarrow f(\omega) + g(\omega)\} $ и $\{\omega : f_n(\omega) + g_n(\omega) \rightarrow f(\omega) + g(\omega)\} $ содержат в себе $A \cap B$ и поэтому вероятностная мера от них равна 1.
+\end{proof}
+
+\end{frame}
+
+
+
+
+\begin{frame}{Сходимость по вероятности}
+\begin{mydef}[Сходимость по вероятности]
+Последовательность $\{f_n\}$ случайных величин сходится по вероятности к случайной величине $f$, если
+$$
+\lim_{n \to \infty} \P(\{\omega: |f_n(\omega) -f(\omega)| \geq \epsilon\}) = 0
+$$
+\end{mydef}
+    
+\begin{itemize}
+    \item $f_n \to f, g_n \to g \; \Rightarrow \;$ $f_n + g_n \to f + g$ 
+    \item $f_n \to f, g_n \to g \; \Rightarrow \;$ $f_ng_n \to fg$ 
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Сходимость произведения}
+\begin{enumerate}
+    \item Предположим $f_n \to 0$ по вероятности. Тогда $f_ng \to 0, \forall g$
+    $B_m = \{\omega: |g(\omega)| < m\} \Rightarrow \P(B_m) \uparrow 1 
+    \Rightarrow \P(B_m^c) \to 0$
+    $$
+    \{\omega: |f_n(\omega)g(\omega)| \geq \epsilon\} \subseteq 
+     \{\omega: |f_n(\omega)| \geq \epsilon /m\} \cup
+     \{\omega: |g(\omega)| \geq m\}
+    $$
+    \begin{multline*}
+    \P(\{\omega: |f_n(\omega)g(\omega)| \geq \epsilon\}) \\ \leq
+    \P(\{\omega: |f_n(\omega)| \geq \epsilon /m\}) +
+    \P(\{\omega: |g(\omega)| \geq m\}) \to 0
+    \end{multline*}
+    \item $f_n \to 0, g_n \to 0 \Rightarrow f_ng_n \to 0$
+    \item $f_n \to f, g_n \to g  \Rightarrow f_ng_n - fg \to 0$
+\end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}{Сходимость почти наверное $\Rightarrow$ по вероятности}
+\begin{proposition}
+$f_n \to f$ почти наверное $f_n \to f$ по вероятности 
+\end{proposition}
+\begin{proof}
+Обозначим за $O$ множество $\{\omega: \lim f_n(\omega) \neq f\}$
+
+$A_n = \cup_{m \geq n}\{|f_m - f| \geq \epsilon\}, \; A_{n+1} \subseteq A_n$, $A = \cap_n A_n$
+
+Для $\omega \in O^c$ и для какого-то $n > N$ выполняется $|X_n(\omega) - X| < \epsilon$ $\rightarrow \omega \notin A \Rightarrow A \cap O^c = \emptyset \Rightarrow \P(A) = 0$
+\end{proof}
+\end{frame}
+
+
+
+\begin{frame}{Сходимость по распределению}
+    
+\begin{mydef}
+Последовательность случайных величин $\{f_n\}$ сходится по распределнию к $f$, если
+$$
+\lim_{n \to \infty} F_n(x) = F(x)
+$$
+для всех $x$, в которых $F$ непрерывна.
+\end{mydef}
+
+\begin{mytheor}[Леви]
+Последовательность случайных величин $\{f_n\}$ сходится по распределнию к $f$ тогда и только тогда, когда:
+$$
+\E[e^{iuf_n}] \to \E[e^{iuf}]\;  \text{поточечно}
+$$
+\end{mytheor}
+
+\end{frame}
+
+\begin{frame}{Сходимость в среднем}
+\begin{mydef}
+Последовательность случайных величин $\{f_n\}$ сходится в среднем порядка $r$ к $f$, если
+$$
+\lim_{n \to \infty} \E[|X_n - X|^r] = 0
+$$
+\end{mydef}
+
+\end{frame}
+
+
+\end{document}
