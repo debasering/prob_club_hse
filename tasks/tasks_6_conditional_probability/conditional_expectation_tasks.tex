@@ -1,0 +1,104 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage{comment} 
+\usepackage{lipsum} 
+\usepackage{fullpage} 
+\usepackage[a4paper, total={7in, 10in}]{geometry}
+\usepackage{setspace}
+\onehalfspacing % полуторный интервал для всего текста
+
+\usepackage[fleqn]{amsmath}
+\usepackage{mathtools,amsmath}
+\usepackage{amssymb,amsthm} % assumes amsmath package installed
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{automata,positioning}
+\usepackage{pgfplots}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{arrows,calc,positioning}
+\tikzset{
+	block/.style = {draw, rectangle,
+		minimum height=1cm,
+		minimum width=1.5cm},
+	input/.style = {coordinate,node distance=1cm},
+	output/.style = {coordinate,node distance=4cm},
+	arrow/.style={draw, -latex,node distance=2cm},
+	pinstyle/.style = {pin edge={latex-, black,node distance=2cm}},
+	sum/.style = {draw, circle, node distance=1cm},
+}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{wrapfig}
+
+%% Работа с языком
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{pgfplots}
+\pgfplotsset{width=9cm, height=5cm, compat=1.9}
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+
+\newenvironment{problem}[2][Задача]
+{ \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+	{ \end{mdframed}}
+
+% Define solution environment
+\newenvironment{solution}
+{\textit{Решение:}}
+{}
+\renewcommand{\qed}{\quad\qedsymbol}
+
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\renewcommand{\F}{\mathcal{F}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+\title{Задачи для Клуба теории вероятностей ФЭН ВШЭ}
+\author{Никита Киселев}
+\date{9 июня 2022}
+
+\begin{document}
+
+\maketitle
+
+\section*{Задача 1}
+Prove \textbf{Chebyshev’s inequality} - if $a>0$ then
+$$\P(|X|\geqslant a|\F)\leqslant a^{-2}\mathbb{E}(X^2|\F)$$
+
+
+\section*{Задача 2}
+Show that if $X$ and $Y$ are random variables with $\mathbb{E}(Y|\F)=X$ and $\mathbb{E}Y^2=\mathbb{E}X^2<\infty$, then $X=Y \: a.s.$
+
+
+\section*{Задача 3\dagger}
+The result in the last exercise implies that if $\mathbb{E}Y^2<\infty$ and
+$\mathbb{E}(Y|\F)$ has the same distribution as $Y$, then $\mathbb{E}(Y|\F)=Y \: a.s.$ Prove this under the assumption $\mathbb{E}Y<\infty$.
+
+
+\section*{Задача 4}
+A coin shows heads with probability $p$. Let $X_n$ be the number of flips required to obtain a run of $n$ consecutive heads. Show that
+$$\mathbb{E}X_n=\sum\limits_{k=1}^np^{-k}$$
+
+\section*{Задача 5}
+An urn contains initially $b$ blue balls and $r$ red balls, where $b$, $r\geqslant2$. Balls are drawn one by one
+without replacement. Show that the mean number of draws until the first colour drawn is first repeated
+equals $3$.
+
+
+\end{document}
