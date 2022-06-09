@@ -1,0 +1,385 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage{graphicx}
+
+\theoremstyle{definition}
+\newtheorem{mytheor}[theorem]{Теорема}
+\newtheorem{mydef}[theorem]{Определение}
+\newtheorem{proposition}[theorem]{Утверждение}
+\newtheorem{remark}[theorem]{Замечание}
+\newtheorem{myexample}[theorem]{Пример}
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Условное матожидание}
+\author[Н. Киселев]{Н. Киселев}
+\institute[Клуб теории вероятностей]{Клуб теории вероятностей ФЭН ВШЭ}
+\date{9 июня 2022 г.}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\F}{\mathcal{F}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+% \newcommand\mytext{Условное матожидание}
+
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+
+
+
+\begin{document}  % начало презентации
+	
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Напоминание}
+
+\begin{enumerate}
+\item Вероятностное пространство $(\Omega, \F, \P)$. Сигма-алгебра (замкнутость относительно дополнения и счетного объединения). Вероятность (2 аксиомы).
+\item Минимальная сигма-алгебра.
+    \begin{mydef}
+    Пусть $\Omega$ - пространство элементарных исходов, $\mathcal{A}$ - какое-то семейство его подмножеств. Минимальной сигма-алгеброй, порожденной $\mathcal{A}$, называется семейство $\sigma(\mathcal{A})$, удовлетворяющее условиям:
+    \\
+    1. $\mathcal{A}\subset\sigma(\mathcal{A})$
+    \\
+    2. $\sigma(\mathcal{A})$ является $\sigma$-алгеброй
+    \\
+    3. Если $\mathcal{G}$ - $\sigma$-алгебра и $\mathcal{A}\subset\mathcal{G}$, то $\sigma(\mathcal{A})\subset\mathcal{G}$
+    \end{mydef}
+\item Измеримость. Далее будем использовать обозначение $X\in\F$.
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Напоминание}
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item Интегрируемость.
+    \begin{mydef}
+    Будем говорить, что $f$ интегрируема, если $\int |f|d\mu<\infty$.
+    \end{mydef}
+    \begin{remark}
+    В качестве $f$ можно рассматривать случайную величину, так как случайная величина - функция $\Omega\to\R$.
+    \end{remark}
+\item Абсолютная непрерывность относительно меры.
+    \begin{mydef}
+    $\nu$ абсолютно непрерывно относительно $\mu$, если для любого измеримого $A$ из $\mu(A)=0$ следует $\nu(A)=0$. Пишут $\nu\ll\mu$.
+    \end{mydef}
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Напоминание}
+
+\begin{enumerate}
+\setcounter{enumi}{5}
+\item Теорема Радона-Никодима.
+    \begin{mytheor}
+    Пусть $\mu$ и $\nu$ - $\sigma$-конечные (то есть все пространство может быть представлено в виде счетного объединения измеримых множеств конечной меры) меры на $(\Omega, \F)$. Если $\nu\ll\mu$, то существует такая функия $f\in\F$, что для всех $A\in\F$
+    $$\int\limits_Afd\mu=\nu(A)$$
+    $f$ обычно обозначают как $\dfrac{d\nu}{d\mu}$ - производная Радона-Никодима меры $\nu$ относительно меры $\mu$.
+    \end{mytheor}
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Напоминание}
+
+\begin{enumerate}
+\setcounter{enumi}{6}
+\item Теорема Лебега о мажорируемой сходимости.
+    \begin{mytheor}
+    Пусть $(X, \F, \mu)$ - пространство с мерой. Пусть $\{f_n\}_{n=1}^\infty$ и $f$ - измеримые функции на $X$ и $f_n(x)\to f$ почти всюду. Если существует определенная на том же пространстве интегрируемая функция $g$ такая, что для всех $n$ $|f_n(x)|<g(x)$ почти всюду, то функции $f_n$ и $f$ интегрируемы и
+    $$\lim\limits_{n\to\infty}\int\limits_Xf_n(x)\mu(dx)=\int\limits_Xf(x)\mu(dx)$$
+    \end{mytheor}
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Формальное определение}
+
+\begin{mydef}[Условное матожидание]
+Пусть $(\Omega, \mathcal{F}_0, \P)$ - вероятностное пространство, $\F\subset\mathcal{F}_0$ - $\sigma$-алгебра, и $X\in\mathcal{F}_0$ - случайная величина с $\mathbb{E}|X|<\infty$. \textbf{Условное} матожидание $X$ \textbf{по сигма-алгебре} $\F$, $\mathbb{E}(X|\F)$ - любая случайная величина $Y$, удовлетворяющая:
+\\
+(i) $Y\in\F$
+\\
+(ii) $\forall A\in\F \:$ $\int_AYd\P=\int_AXd\P$
+\end{mydef}
+
+\end{frame}
+
+
+\begin{frame}{Формальное определение}
+
+\begin{proposition}
+Если $Y$ удовлетворяет (i) и (ii), то $Y$ интегрируема.
+\end{proposition}
+\begin{proof}
+Пусть $A=\{Y>0\}$. Воспользовавшись (ii) дважды, получаем:
+$$\int\limits_AYd\P=\int\limits_AXd\P\leqslant\int\limits_A|X|d\P$$
+$$\int\limits_{A^c}-Yd\P=\int\limits_{A^c}-Xd\P\leqslant\int\limits_{A^c}|X|d\P$$
+Сложив, получаем $\mathbb{E}|Y|\leqslant\mathbb{E}|X|\leqslant\infty$.
+\end{proof}
+
+\end{frame}
+
+
+\begin{frame}{Условное матожидание, единственность}
+
+\begin{proposition}
+Если $Y$ и $Y'$ удовлетворяют (i) и (ii), то $Y=Y'$ почти наверное.
+\end{proposition}
+\begin{proof}
+Мы знаем, что $\int\limits_AYd\P=\int\limits_AY'd\P \:$ $\forall A\in\F$. Возьмем $A=\{Y-Y'\geqslant\varepsilon>0\}$, получим
+$$0=\int\limits_A(X-X)d\P=\int\limits_A(Y-Y')d\P\geqslant\varepsilon\P(A)$$
+Итого, $\P(A)=0$. Это выполняется для всех $\varepsilon$, $Y$ и $Y'$ можно поменять местами и отсюда очевидно следует равенство почти наверное.
+\end{proof}
+Строго говоря, равенства вида $Y=\mathbb{E}(X|\F)$ должны писаться как $Y=\mathbb{E}(X|\F) \: a.s.$, но мы опустим это.
+
+\end{frame}
+
+
+\begin{frame}{Условное матожидание, существование}
+
+\begin{proposition}
+Условное матожидание $\mathbb{E}(X|\F)$ существует.
+\end{proposition}
+\begin{proof}
+Для начала рассмотрим случай $X\geqslant0$. Будем пользоваться теоремой Радона-Никодима. Положим $\mu=\P$ и $\nu(A)=\int\limits_AXd\P$ для $A\in\F$. Можно показать, что $\nu$ - это мера, и что $\nu\ll\mu$. Производная Радона-Никодима $\dfrac{d\nu}{d\mu}\in\F$ дает
+$\int\limits_AXd\P=\nu(A)=\int\limits_A\dfrac{d\nu}{d\mu}d\P$.
+Подставив $A=\Omega$, получим интегрируемость $\dfrac{d\nu}{d\mu}$, и только что мы показали выполнение свойства (ii). Итого, $\dfrac{d\nu}{d\mu}=E(X|\F)$.
+\\
+Общий случай выводится из простого представления $X=X^+-X^-$.
+\end{proof}
+
+\end{frame}
+
+
+\begin{frame}{Примеры}
+
+\textbf{Интуиция} об условном матожидании - о сигма-алгебре $\F$ можно думать как об описании информации, которая у нас имеется на руках. Про каждое событие $A\in\F$ мы знаем, произошло оно или нет. И тогда $\mathbb{E}(X|\F)$ - это наше лучшее предположение о значении случайной величины $X$ на основе имеющейся у нас информации.
+\\
+\\
+\begin{enumerate}
+\item $X\in\F$. Тогда $\mathbb{E}(X|\F)=X$.
+\\
+Из нашей интуиции это следует мгновенно. Более строго, (i) выполняется по предположению измеримости $X$, а (ii) выполняется очевидно - $\int\limits_AXd\P=\int\limits_AXd\P$ для всех $A\in\F$.
+\end{enumerate}
+
+
+\end{frame}
+
+
+\begin{frame}{Примеры}
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\item Пусть $X$ независимо от $\F$, то есть $\forall B\in\mathcal{R}$, $\forall A\in\F$ $\P\big(\{X\in B\}\cap A\big)=\P(X\in B)\P(A)$. Тогда $\mathbb{E}(X|\F)=\mathbb{E}X$.
+\\
+Это противоположный предыдущему примеру случай - если мы ничего не знаем о случайной величине $X$, лучшее предположение о ней - ее матожидание. Более строго:
+\\
+(i) выполняется, так как $\mathbb{E}X\in\F$ (это просто константа).
+\\
+Чтобы показать, что (ii) выполняется, рассмотрим случайную величину $\mathbb{I}_A$. $X$ и $\mathbb{I}_A$ независимы, поэтому
+$$\int\limits_AXd\P=\int\limits_A(X\mathbb{I}_A)d\P=\int\limits_\Omega(X\mathbb{I}_A)d\p=\mathbb{E}(X\mathbb{I}_A)=\mathbb{E}X\cdot\mathbb{E}\mathbb{I}_A=$$
+$$=\mathbb{E}X\cdot\P(A)=\int\limits_A\mathbb{E}Xd\P$$
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Примеры}
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item Рассмотрим конечное или счетное разбиение $\Omega=(\Omega_1,\Omega_2,\dotsc)$. Оно пораждает $\sigma$-алгебру $\F=\sigma(\Omega_1,\Omega_2,\dotsc)$. Тогда на множестве элементарных исходов $\Omega_i$ $\mathbb{E}(X|\F)=\dfrac{\mathbb{E}(X; \Omega_i)}{\P(\Omega_i)}$, где $\mathbb{E}(X;\Omega_1)$ - среднее значение $X$ на $\Omega_i$ - $\int\limits_{\Omega_i}Xd\P$.
+\\
+Интуиция - информация, содержащаяся в $\Omega_i$, задает область разбиения, в которой находится $X$, и тогда наше лучшее предположение - среднее значение $X$ по этой области. Более строго:
+\\
+(i) выполняется, так как $\dfrac{\mathbb{E}(X; \Omega_i)}{\P(\Omega_i)}$ - константа на каждой области разбиения, то есть такая случайная величина измерима.
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Примеры}
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\item
+Чтобы показать, что (ii) выполняется, заметим, что достаточно проверить это свойство для $A=\Omega_i$ (в $\F$ могут быть только disjoint объединения событий $\Omega_i$, пересечений быть не может, так как это разбиение, и тогда можно просто применить свойство интеграла Лебега для disjoint событий):
+$$\int\limits_{\Omega_i}\frac{\mathbb{E}(X; \Omega_i)}{\P(\Omega_i)}d\P=\mathbb{E}(X; \Omega_i)=\int\limits_{\Omega_i}Xd\P$$
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Примеры}
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item Перейдем к более привычной записи условного матожидания, а именно матожидания относительно другой случайной величины.
+\begin{mydef}
+$$\mathbb{E}(X|Y)=\mathbb{E}(X|\sigma(Y)),$$
+где $\sigma(Y)$ - $\sigma$-алгебра, порожденная случайной величиной $Y$.
+\end{mydef}
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Примеры}
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item Свяжем рассмотренное определение условного матожидания с определением, встречающимся в обычных курсах - $\mathbb{E}\big(g(X)|Y\big)=h(Y)$, где
+$$h(y)=\frac{\int g(x)f(x, y)dx}{\int f(x, y)dx}$$
+Покажем, что это и правда условное матожидание:
+\\
+(i) выполняется, так как $h(Y)\in\sigma(Y)$ ($h$ - адекватная функция от случайной величины $Y$, которая естественно измерима относительно $\sigma$-алгебры, порожденной самой собой).
+\\
+(ii) выполняется, так как если $A\in\sigma(Y)$, то $A=\{w: Y(w)\in B\}$ для некоторого $B\in\mathcal{R}$, и тогда
+$$\int\limits_Ah(Y)d\P=\int\limits_B\int h(y)f(x, y)dxdy=\int\limits_B\int g(x)f(x, y)dxdy=$$
+$$=\mathbb{E}\big(g(X)\mathbb{I}_B(Y)\big)=\mathbb{E}\big(g(X); A\big)=\int\limits_Ag(X)d\P$$
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Примеры}
+
+\begin{enumerate}
+\setcounter{enumi}{5}
+\item Пусть $X$ и $Y$ - независимые случайные величины, $\varphi$ - функция с $\mathbb{E}|\varphi(X, Y)|<\infty$, и $g(x)=\mathbb{E}\big(\varphi(x, Y)\big)$. Тогда $$\mathbb{E}\big(\varphi(X, Y)|X\big)=g(X)$$
+(i) выполнено очевидно - $g(X)\in\sigma(X)$.
+\\
+Чтобы показать (ii), опять запишем $A\in\sigma(X)$ как $A=\{X\in C\}$, и из независимости и определения $g$ получаем
+$$\int\limits_A\varphi(X, Y)d\P=\mathbb{E}\big(\varphi(X, Y)\mathbb{I}_C(X)\big)=\int\int\varphi(x, y)\mathbb{I}_C(x)\nu(dy)\mu(dx)=$$
+$$=\int g(x)\mathbb{I}_C(x)\mu(dx)=\mathbb{E}\big(g(X)\mathbb{I}_C(X)\big)=\int\limits_Ag(X)d\P$$
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Свойства}
+
+\begin{enumerate}
+\item $\mathbb{E}(aX+Y|\F)=a\mathbb{E}(X|\F)+\mathbb{E}(Y|\F)$
+\item Если $X\leqslant Y$, то $\mathbb{E}(X|\F)\leqslant\mathbb{E}(Y|\F)$
+\item Если $X_n\geqslant0$ и $X_n\uparrow X$ с $\mathbb{E}X<\infty$, то $\mathbb{E}(X_n|\F)\uparrow\mathbb{E}(X|\F)$
+\\
+\textbf{Доказательство}: пусть $Y_n=X-X_n$, $Y_n\downarrow0$. Достаточно показать $\mathbb{E}(Y_n|\F)\downarrow0$. Из убывания и ограниченности $Y_n$ $Z_n=\mathbb{E}(Y_n|\F)\downarrow Z_{\infty}$ - сходится к какому-то пределу. По определению для $A\in\F$
+$$\int\limits_AZ_nd\P=\int\limits_AY_nd\P$$
+Так как $Y_n\downarrow0$, то по теореме Лебега о мажорируемой сходимости
+$$\int\limits_AZ_{\infty}d\P=\lim\limits_{n\to\infty}\int\limits_AZ_nd\P=0$$
+Это верно для всех $A\in\F$, поэтому $Z_{\infty}=0$.
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Свойства}
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item Если $\varphi$ выпуклая и $\mathbb{E}|X|$, $\mathbb{E}|\varphi(X)|<\infty$, то $\varphi\big(\mathbb{E}(X|\F)\big)\leqslant\mathbb{E}\big(\varphi(X)|\F\big)$
+\item $\mathbb{E}(\mathbb{E}(X|\F))=\mathbb{E}X$
+\\
+\textbf{Доказательство}: следует из свойства (ii) условного матожидания, взяв $A=\Omega$.
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Свойства}
+
+\begin{enumerate}
+\setcounter{enumi}{5}
+\item Если $\F_1\subset\F_2$, то:
+\\
+1. $\mathbb{E}\big(\mathbb{E}(X|\F_1)|\F_2\big)=\mathbb{E}(X|\F_1)$
+\\
+2. $\mathbb{E}\big(\mathbb{E}(X|\F_2)|\F_1\big)=\mathbb{E}(X|\F_1)$
+\\
+Неформально - меньшая $\sigma$-алгебра всегда побеждает (вспомните интуицию с информацией).
+\\
+\textbf{Доказательство}:
+\\
+Первое равенство верно, так как $\mathbb{E}(X|\F_1)\in\F_1$, а $\F_1\subset\F_2$, т.е. $\mathbb{E}(X|\F_1)\in\F_2$, и тогда согласно примеру 1 получаем, что равенство верно.
+\\
+Для доказательства второго заметим, что по определению $\mathbb{E}(X|\F_1)\in\F_1$, т.е. (i) выполнено. Также если $A\in\F_1\subset\F_2$, то
+$$\int\limits_A\mathbb{E}(X|\F_1)d\P=\int\limits_AXd\P=\int\limits_A\mathbb{E}(X|\F_2)d\P,$$
+откуда получаем выполнение (ii).
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Свойства}
+
+\begin{enumerate}
+\setcounter{enumi}{6}
+\item Если $X\in\F$ и $\mathbb{E}|Y|$, $\mathbb{E}|XY|<\infty$, то $\mathbb{E}(XY|\F)=X\mathbb{E}(Y|\F)$
+\\
+\textbf{Доказательство}: (i) выполняется, так как $X\in\F$ по предположению, $\mathbb{E}(Y|\F)$ по определению. Докажем (ii) для самого элементарного случая $X=\mathbb{I}_B$ для какого-то $B\in\F$. В этом случае для $A\in\F$
+$$\int\limits_A\mathbb{I}_B\mathbb{E}(Y|\F)d\P=\int\limits_{A\cap B}\mathbb{E}(Y|\F)d\P=\int\limits_{A\cap B}Yd\P=\int\limits_A\mathbb{I}_BYd\P$$
+Отсюда по линейности получаем, что (ii) выполнено и для простой случайной величины $X$, а далее для $X$, $Y>0$ построим приближение $X_n\uparrow X$ и воспользуемся теоремой Лебега о мажорируемой сходимости. Наконец, для общего случая разложим $X$ и $Y$ на положительную и отрицательную части.
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Свойства}
+
+\begin{enumerate}
+\setcounter{enumi}{7}
+\item Если $\mathbb{E}X^2<\infty$, то $\mathbb{E(X|\F)}$ - такая случайная величина $Y\in\F$, которая минимизирует $\mathbb{E}(X-Y)^2$
+\\
+\textbf{Замечание}: это утверждение показывает геометрическую интерпретацию условного матожидания. $L^2(\F_0)=\{Y\in\F_0: \mathbb{E}Y^2<\infty\}$ - Гильбертово прстранство, $L^2(\F)$ - замкунтое подпространство. Тогда $\mathbb{E}(X|\F)$ - проекция $X$ на это подпространство, то есть точка из $L^2(\F)$, наиболее близкая к $X$.
+\\
+\textbf{Доказательство}: взяв $Z\in L^2(\F)$, по свойству 7 получим $Z\mathbb{E}(X|\F)=\mathbb{E}(ZX|\F)$ (вопрос - почему можно применить свойство 7?). Взяв матожидания, получаем $$\mathbb{E}\big(Z\mathbb{E}(X|\F)\big)=\mathbb{E}\big(\mathbb{E}(ZX|\F)\big)=\mathbb{E}(ZX) \Leftrightarrow \mathbb{E}\big(Z(X-\mathbb{E}(X|\F))\big)=0$$
+Положив $Y=\mathbb{E}(X|\F)-Z$, легко видеть, что минимум достигается при $Z=0$.
+\end{enumerate}
+
+\end{frame}
+
+
+
+
+
+\end{document}
