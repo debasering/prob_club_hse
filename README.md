@@ -26,8 +26,10 @@ Here we store lectures and tasks of the Club.
 
 11) July 29, 2022 - Markov Chain Monte Carlo (Nikita Kiselev, Nikolai Averianov)
 
-#### Founders of the club:
-Nikolai Averianov, Alexander Plakhin
+#### Founders of the Club:
+Nikolai Averianov ([GitHub](https://github.com/debasering), [Telegram](https://t.me/debasering))
+Alexander Plakhin ([GitHub](https://github.com/aaplakhin), [Telegram](https://t.me/ipomeya31))
 
-#### Current heads:
-Nikita Kiselev, Alexander Plakhin
+#### Current Heads:
+Nikita Kiselev ([GitHub](https://github.com/ki33elev), [Telegram](https://t.me/Nikita_Ki33elev))
+Alexander Plakhin ([GitHub](https://github.com/aaplakhin), [Telegram](https://t.me/ipomeya31))
