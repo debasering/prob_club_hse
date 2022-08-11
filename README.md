@@ -25,3 +25,9 @@ Here we store lectures and tasks of the Club.
 10) June 25, 2022 - Martingales (Boris Demeshev)
 
 11) July 29, 2022 - Markov Chain Monte Carlo (Nikita Kiselev, Nikolai Averianov)
+
+#### Founders of the club:
+Nikolai Averianov, Alexander Plakhin
+
+#### Current heads:
+Nikita Kiselev, Alexander Plakhin
