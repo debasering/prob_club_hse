@@ -1,0 +1,363 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage{graphicx}
+\usepackage{hyperref}
+\theoremstyle{definition}
+\newtheorem{mytheor}[theorem]{Theorem}
+\newtheorem{reminder}{Reminder}
+\newtheorem{myproof}[proof]{Proof}
+\newtheorem{mydef}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Note}
+\newtheorem{myexample}[theorem]{Example}
+\newtheorem{blank}[blank]{}
+\newtheorem{mycoll}[theorem]{Corollary}
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Semimartingales and Girsanov's theorem}
+\author[Nikita Orlov, Nikolai Averianov]{Nikita Orlov, Nikolai Averianov}
+\institute[HSE FES Probability Theory Club]{HSE FES Probability Theory Club}
+\date{January 15, 2023}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathcal{F}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+% \newcommand\mytext{Условное матожидание}
+
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+
+
+
+\begin{document}  % начало презентации
+	
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+% \begin{frame}{Plan}
+
+% \begin{itemize}
+%     \item Recap (5 minutes)
+
+%     \item Local martingales (1-2 slides), Semimartingales (a lot of slides), Quadratic variation, generalized Ito (45 minutes)
+
+%     \item Stochastic exponential, Doob-Meyer theorem, Girsanov's theorem with sketch of proof, examples and applications (30 minutes)
+% \end{itemize}
+
+% \end{frame}
+
+\begin{frame}{Motivation}
+\begin{itemize}
+    \item Want to extend stochastic integration on the most general class (which semimartingales happen to be).
+
+    \item Semimartingales have significant importance for financial mathematics, because if want a model a price of an asset on an arbitrage-free market by a stochastic process, we can only do that using semimartingales.
+
+    \item During this lecture we will cover some general facts about semimartingales, discover Girsanov's theorem and show some of its applications in pricing.
+    
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Recap}
+\begin{definition}
+Filtration $\mathbb{F}$ on probability space $(\Omega, \mathcal{F}, \mathbb{P})$ is a collection of increasing sub-$\sigma$-algebras of $\mathcal{F}$: $\mathbb{F} := (\mathcal{F}_t)_{t \in T}; \; \mathcal{F}_s \subset \mathcal{F}_t, \forall t > s$. Space $(\Omega, \mathcal{F}, \mathbb{F}, \mathbb{P})$ is called filtered.
+\end{definition}
+
+\begin{definition}
+A martingale $X_t$ on a filtered probability space $(\Omega, \mathcal{F}, \mathbb{F}, \mathbb{P})$ is an $\mathbb{F}$-adapted stochastic process, which satisfies: $\E[X_{t+h}|\mathcal{F}_t] = X_t, \forall t, h \geq 0 $.
+\end{definition}
+
+\begin{definition}
+    A stopping time $\tau$ is a random variable on a filtered probability space $(\Omega, \mathcal{F}, \mathbb{F}, \mathbb{P})$ if $\{\tau \leq t\} \in \mathcal{F}_t, \forall t \in T$.
+\end{definition}
+    
+\end{frame}
+
+\begin{frame}{Recap}
+\begin{definition}
+    A stochastic process $X_t$ is a Lévy process if the following holds:
+    \begin{enumerate}
+        \item $X_0 = 0$ a.s.
+        \item For any set of time moments $0 \leq t_1 < ... < t_n$, increments $X_{t_1} - X_0, \ldots, X_{t_{n}} -X_{t_{n-1}}$ are independent.
+        \item $\forall t_1, t_2, h \geq 0$, $X_{t_2+h} - X_{t_1+h} \overset{d}{=}
+        X_{t_2} - X_{t_1}$ -- increments are stationary.
+        \item $X_{t+h}\overset{\P}{\to} X_t, \; h \to 0$ -- the process is continous in probability.
+        
+    \end{enumerate}
+\end{definition}
+
+\begin{definition}
+    A function $f$ is a càdlàg function if it is right-continous everywhere and has left limits everywhere.
+\end{definition}
+One can show that any Lévy process has a modification with a.s. càdlàg trajectories.
+
+\end{frame}
+
+% \begin{frame}{Recap}
+    
+% \end{frame}
+
+\begin{frame}{Local martingales}
+    \begin{definition}
+        Let $M$ be a stochastic process, $\tau$ - stopping time. $M^\tau$ denotes a process $M$ stopped at time $\tau$:
+        \begin{equation*}
+            M^{\tau}_t = M_{t \wedge \tau}
+        \end{equation*}
+    \end{definition}
+    \begin{definition}
+        Let $S$ be a class of stochastic processes. A process $M$ is locally in $S$ if there exists a sequence of stopping times $\tau_n \uparrow \infty$ such that $\mathbb{I} \{\tau_n > 0\} M^{\tau_n}$ are in $S$. The sequence $(\tau_n)_{n \geq 1}$ is called a localizing sequence.
+    \end{definition}
+    \begin{definition}
+       An $\mathbb{F}$-adapted process $M_t$ is called a local martingale if it is càdlàg and locally in the class of martingales.
+    \end{definition}
+% надо доделать
+\end{frame}
+\begin{frame}{Local martingales}
+Denote $M_t^* = \sup_{s \leq t} |M_s|, \, M^* = \sup_{s \geq 0} |M_s|$
+    \begin{mytheor}[]
+        Let $M$ be a local martingale.
+        \begin{enumerate}
+            \item If $\E [M_t^*] < \infty \, \forall t$ then $M$ is a martingale
+            \item If $\E [M^*] < \infty$ then $M$ is a u.i. (uniformly integrable) martingale
+        \end{enumerate}
+    \end{mytheor}
+    \begin{proof}[Proof]
+        Let $(\tau_n)_{n \geq 1}$ be a localizing sequence of $M$. Then 
+        $$
+            \forall s \leq t: \, \E[M_{\tau_n \wedge t} | \F_s] = M_{\tau_n \wedge s}
+            $$
+        Applying dominated convergence theorem (hence $M_{\tau_n \wedge t}$ is dominated by the integrable r.v. $M^*_t$) gives that $M$ is a martingale. If $\E [M^*] < \infty$ the family $(M_t)_{t \geq 0}$ is dominated by $M^*$ thus it is u.i.
+    \end{proof}
+\end{frame}
+\begin{frame}{Local martingales}
+    \begin{mycoll}[]
+        \begin{itemize}
+           \item If $M$ is a bounded local martingale then M is a u.i. martingale
+           \item If $M$ is a local martingale and a Lévy process then M is a martingale
+           \item If $(M_n)_{n \geq 1}$ is a discrete time local martingale and $\E|M_n| < \infty \, \forall n$ then M is a martingale
+        \end{itemize}
+    \end{mycoll}
+    \begin{example}
+        Let $W_t$ be a Brownian motion and $\tau = \inf \{t:W_t = -1\}$. The stopped process $W_{t \wedge \tau}$ is a martingale, $\E[W_t] = 0$ however its limit is equal to $-1$. Rescaling the time index $X_t = W^\tau _{t/(1-t)} \cdot \mathbb{I}\{t < 1\} - 1 \cdot \mathbb{I} \{t \geq 1\}$ defines a local martingale with respect to its natural filtration, however $\E[X_1] = -1 \neq \E[X_0] = 0$, so $X$ is not a martingale. A localizing sequence can be chosen $\tau_k = \min\{t: X_t = k\}$ if there is such $t$, otherwize $\tau_k = k$.
+    \end{example}
+\end{frame}
+\begin{frame}{Semimartingales}
+    \begin{definition}
+        A real-valued process $X$ on a filtered probability space $(\Omega, \F, \mathbb{F}, \P)$ is called a semimartingale if it decomposes
+        \begin{equation*}
+            X_t = A_t + M_t
+        \end{equation*}
+        where $M$ is a local martingale and $A$ is an adapted càdlàg process with finite variation (the total variation of each path $t \longmapsto A_t(\omega)$ is bounded over each finite interval $[0, t]$).
+    \end{definition}
+    Intuitively, a process $A$ plays the role of a drift term (as $\int_0^t b_s\,ds$) and a local martingale $M$ is a pure randomness part (as $\int_0^t \sigma_s \, dW_s$)
+\end{frame}
+\begin{frame}{Semimartingales}
+    \begin{definition}
+        A stochastic integral with respect to a semimartingale $X$ can be defined 
+        \begin{equation*}
+            \int_{0}^t H_s \, dX_s = \sum_{i \geq 1} H_{t_{i-1}}(X_{t \wedge t_i} - X_{t \wedge t_{i-1}})
+        \end{equation*}
+        where $0 = t_0 < t_1< \dots $ and $t_n \xrightarrow[]{n \to \infty} \infty$ , H is predictable, and locally bounded: $|H_t(\omega)| \leq n \, \forall 0 < t< \tau_n(\omega)$, where $(\tau_n)$ is a sequence of stopping times increasing to $\infty$.
+    \end{definition}
+\end{frame}
+\begin{frame}{Semimartingales}
+    \begin{mytheor}[Lévy-Ito decomposition]
+        Let $X_t$ be a Lévy process, $b \in \mathbb{R}, c \in \mathbb{R_+}, \nu$ is a Lévy measure s.t. $$\int_{|x| \leq 1} x^2 \nu(dx) < \infty, \int_{|x| > 1}\nu(dx) < \infty$$
+        Then $X_t$ can be decomposed 
+        \begin{equation*}
+            X_t = bt + c W_t + J_t
+        \end{equation*}
+        where $bt + cW_t$ is a continuous part and $J_t$ is a jump part.
+    \end{mytheor}
+    Therefore, any Lévy process is a semimartingale as it the sum of a square integrable martingale and a finite variation process.
+\end{frame}
+\begin{frame}{Quadratic variation}
+        The existence of quadratic (co)variations is a huge difference between standard calculus and stochastic calculus. 
+    \begin{definition}
+        Let $X_t$ be a stochastic process defined on a probability space $(\Omega, \F, \P)$ and time index $t$ ranging over non-negative real numbers. The quadratic variation of $X_t$ written as $[X]_t$ is defined as:
+        \begin{equation*}
+            [X]_t = \lim_{||P|| \to 0} \sum_{k=1}^n (X_{t_k} - X_{t_{k-1}})^2
+        \end{equation*}
+        where $P$ ranges over partitions $0 = t_0 < t_1< \dots < t_n = t$ and the norm is the mesh $\max(t_i - t_{i-1})$. This limit is defined using convergence in probability.
+    \end{definition}
+\end{frame}
+\begin{frame}{Quadratic Variation}
+    \begin{definition}
+        Let $X, Y$ be semimartingales. The quadratic covariation of $X$ and $Y$ is defined by
+        \begin{equation*}
+            [X, Y]_t = X_tY_t - \int_0^t X_{s-}dY_s - \int Y_{s-} dX_s
+        \end{equation*}
+        The quadratic variation $[X]$ is equal to $[X, X]$. The polarization identity:
+        \begin{equation*}
+            [X, Y]_t = \frac{1}{2}([X+Y]_t - [X]_t - [Y]_t)
+        \end{equation*}
+    \end{definition}
+\end{frame}
+\begin{frame}{Quadratic Variation}
+    \begin{definition}
+        Let $X$ be a semimartingale. The continuous part of quadratic variation $[X]^c$ is defined
+        \begin{equation*}
+            [X]_t = [X]_t^c + X_0^2 + \sum_{0<s\leq t} (\Delta X_s)^2
+        \end{equation*}
+        If $[X]^c \equiv 0$, $X$ is called a quadratic pure jump semimartingale.
+    \end{definition}
+    \begin{example}
+        If $N$ is a Poisson process then $[N] = N$, so it is a quadratic pure jump semimartingale.
+    \end{example}
+\end{frame}
+\begin{frame}{Quadratic Variation}
+    \begin{mytheor}
+        If $X$ is an adapted, càdlàg process of finite variation then it is a quadratic pure jump semimartingale.
+    \end{mytheor}
+    \begin{proof}[Proof]
+        The integration by parts formula and definition of $[X]$ give us:
+        \begin{equation*}
+            X^2_t = \int_0^t X_{s-} dX_s + \int_0^t X_s dX_s, \quad X^2_t = 2 \int_0^s X_{s-} dX + [X]_t
+        \end{equation*}
+        Simply rewriting one of integrals:
+        \begin{equation*}
+            \int_0^t X_s dX_s = \int_0^t (X_{s-} + \Delta X_s) dX_s = \int_0^t X_{s-} dX_s + \sum_{0 < s \leq t}(\Delta X_s)^2
+        \end{equation*}
+     Therefore $[X]_t = \sum_{s \leq t} (\Delta X_s)^2$ 
+    \end{proof}
+\end{frame}
+\begin{frame}{Generalized Ito's formula}
+    \begin{mytheor}
+        If X is a semimartingale and $f \in \mathcal{C}^2(\mathbb{R})$, then $(f(X_t))_{t \geq 0}$ is also a semimartingale given by
+        \begin{gather*}
+            f(X_t) = f(X_0) + \int_0^t f' (X_{s-})\, dX_s + \frac{1}{2} \int_0^t f{''}(X_{s-})\, d [X]^c_s \\ + \sum_{0 < s \leq t}\bigg(f(X_s) - f(X_{s-})- f' (X_{s-})\Delta X_s\bigg)
+        \end{gather*}
+    \end{mytheor}
+    In particular, if $X$ has continuous paths then the last term cancels out. \\ If $X$ is of finite variation then the second term cancels out.
+\end{frame}
+
+\begin{frame}{Stochastic exponential}
+\begin{definition}
+    A stochastic exponential $\mathcal{E}(X)$  of a semimartingale $X$ is a process $U$ that solves the following SDE:
+    $$
+    U_t = 1 + \int_0^t U_{s-} dX_s 
+    $$
+\end{definition}
+After applying Ito's lemma we get the closed-form solution to the equaiton given by:
+$$
+\mathcal{E}(X)_t = 
+\exp{\bigg(X_t - X_0 - \cfrac{1}{2} [X]_t^c\bigg)}\prod_{s \leq t} e^{-\Delta X_s}(1 + \Delta X_s).
+$$
+\end{frame}
+
+
+\begin{frame}{Radon-Nikodym derivative}
+To get to Girsanov's theorem we should remember what a Radon-Nikodym derivative is.
+\begin{reminder}
+A measure $\mathbb{Q}$ is absolutely continuous w.r.t measure $\P$ ($\mathbb{Q} \ll \P$) if the following identity holds:
+$$
+\mathbb{Q}(A) = \int_A Z d\mathbb{P}
+$$
+Z is called a Radon-Nikodym derivative denoted by $\cfrac{d\mathbb{Q}}{d\P}$
+\end{reminder}
+If $\mathbb{Q} \ll \P$ and $\mathbb{P} \ll \mathbb{Q}$ we say that the measures are equivalent. In fact it happens iff the measures "agree" \; on what sets they assign a zero measure.
+\end{frame}
+
+\begin{frame}{Girsanov's theorem}
+Now we are going to move to Girsanov's theorem.
+\begin{proposition}
+Let $\Q$ be a probability a probability measure and  $\Q \ll \P$ on $(\Omega, \mathcal{F}$). Then $Z_t = \cfrac{d\Q}{d\P} \bigg|_{\mathcal{F}_t}$ is unique and called density process. $Z_t$ is a $\P$ martingale with a càdlàg modification.
+\end{proposition}
+
+\begin{mytheor}[Girsanov]
+Assume $\Q \sim \P$ on $(\Omega, \mathcal{F})$, $L_t$ is a (unique) continuous local martingale such that $Z_t = \mathcal{E}(L)_t$ and $M_t$ a local martingale on $\P$. Then 
+$$
+\tilde{M}_t \equiv M_t - [M, L]_t
+$$
+is a $\Q$ continuous local martingale.
+\end{mytheor}
+
+    
+\end{frame}
+
+
+\begin{frame}{Girsanov and semimartingales}
+\begin{itemize}
+    \item In order to apply Girsanov's theorem to semimartingales  $X_t = X_0 + M_t + A_t$ we should hope that there exists a certain representation for $A_t$: $A_t = J_t \langle M \rangle_t$, where $J_t$ is a càglàd process (left continuous with right limits).
+    \item Then the density process is given by:
+    $$
+    \cfrac{d\Q}{d\P} = \mathcal{E}(-J \cdot M)_t - Z_t, \; \; dZ_t = -J_t Z_{t-} dM_t
+    $$
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Applications of Girsanov's theorem}
+Assume the simplest model, where a stock price $S_t$ has the following log-normal dynamics:
+$$
+dS_t = \mu_t S_t dt + \sigma_t S_t dW_t,
+$$
+where $W_t$ is a $\P$-Brownian motion and $\mu_t$ and $\sigma_t$ are (good) adapted processes. If we "discount" the process we get that it has the dynamics given by:
+$$
+dS_t = (\mu_t - r_t)S_t dt + \sigma_t S_t dW_t,
+$$
+In a (risk-neutral) $\Q$-world we want the discounted price be a martingale $\Rightarrow$ we need to remove the drift.
+\end{frame}
+\begin{frame}{Applications of Girsanov's theorem}
+    From Girsanov's theorem it follows that we with the following density process:
+    $$
+    Z_t = \mathcal{E}\bigg( -\int_0^t\cfrac{\mu_s - r_s}{\sigma_s} dW_S  \bigg) = exp\bigg(-\int_0^t \cfrac{\mu_s - r_s}{\sigma_s} dW_s\bigg - \cfrac{1}{2} \int_0^t\bigg(\cfrac{\mu_s - r_s}{\sigma_s} \bigg)^2 ds \bigg),
+    $$
+    we get $\tilde{W}_t$ which a $\Q$-Brownian motion
+    $$
+    d\tilde{W_t} = dW_t + \cfrac{\mu_s - r_s}{\sigma_s} ds
+    $$
+    
+    If we plug our $\Q$ Brownian motion into price SDE we get that: 
+    $$
+    dS_t = \sigma_t S_t d\tilde{W}_t
+    $$
+    
+\end{frame}
+
+
+
+
+\begin{frame}{Sources}
+\begin{enumerate}
+    \item \href{http://assets.press.princeton.edu/chapters/s10261.pdf}{From Diffusions to Semimartingales}
+    \item \href{https://www.math.cmu.edu/math/events/CMU_Talk_Sept_27_2013.pdf}{Martingales and Local Martingales}
+    \item \href{https://www.andrew.cmu.edu/user/calmost/pdfs/21-882-int_lec.pdf}{Semimartingales and stochastic integration}
+    \item \href{https://faculty.math.illinois.edu/~psdey/MATH562FA21/lec20.pdf}{Girsanov’s Theorem}
+    \item \href{https://almostsuremath.com}{Almost Sure}
+\end{enumerate}
+\end{frame}
+\end{document}
