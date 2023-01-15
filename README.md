@@ -28,6 +28,8 @@ Here we store lectures and tasks of the Club.
 
 12) November 25, 2022 - Continuous-time Markov Chains (Alexander Plakhin, Nikita Kiselev)
 
+13) January 15, 2023 - Semimartingales and Girsanov's Theorem (Nikolai Averianov, Nikita Orlov)
+
 #### Founders of the Club:
 Nikolai Averianov ([GitHub](https://github.com/debasering), [Telegram](https://t.me/debasering))  
 Alexander Plakhin ([GitHub](https://github.com/aaplakhin), [Telegram](https://t.me/ipomeya31))
