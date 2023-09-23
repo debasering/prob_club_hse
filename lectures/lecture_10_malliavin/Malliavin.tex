@@ -1,0 +1,390 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel} 
+\usepackage{graphicx}
+
+\theoremstyle{definition}
+\newtheorem{mydef}[theorem]{Definition}
+\newtheorem{properties}[theorem]{Properties}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{myexample}[theorem]{Example}
+
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Malliavin Calculus}
+\author[A. Makarov, M. Abraham]{Anton Makarov, Maksim Abraham}
+\institute[HSE FES Probability Theory Club]{HSE FES Probability Theory Club}
+\date{\today}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  
+  \mytext 
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+
+\begin{document}  % начало презентации
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Hilbert space}
+\begin{mydef}
+Let $H$ be a linear space on a field $K$. Define an inner product $(\cdot, \cdot): H\; x\; H \rightarrow K$: \\
+1) $\forall x \in H: (x, x) \geq 0$ и $(x, x) \iff x = 0$ \\
+2) $\forall \alpha, \beta \in K\; \forall x, y, z \in H: (\alpha x + \beta y, z) = \alpha (x, z) + \beta (y, z)$ \\
+3) $\forall x, y \in H: (x, y) = \overline{(y, x)}$. \\
+Such space is called euclidian. The space is called Hilbert space, if the euclidean space is complete with respect to the distance function induced by the inner product.
+\end{mydef}
+
+\end{frame}
+
+\begin{frame}{Derivative and divergence}
+\begin{mydef}[Derivative operator]
+Let $f \in C^1 (\mathbb{R})$, then the derivative operator $D$ is such that $Df(x) = f'(x)$. 
+\end{mydef}
+\begin{mydef}[Divergence operator]
+Let $f \in C^1 (\mathbb{R})$, then the divergence operator $\delta$ is such that $\delta f(x) = xf(x) - f'(x)$. 
+\end{mydef}
+
+\end{frame}
+
+
+\begin{frame}{Derivative and divergence}
+$\gamma = N(0, 1)$ is the standard Gaussian probability on $\mathbb{R}$.
+\begin{lemma}
+The operators $D$ and $\delta$ are adjoint with respect to the measure $\gamma$. That means, for any $f, g \in C_p^1(\mathbb{R})$, we have
+$$
+\langle Df, g\rangle_{L^2(\mathbb{R}, \gamma)} = \langle f, \delta g\rangle_{L^2(\mathbb{R}, \gamma)}.
+$$
+\end{lemma}
+\begin{proof}
+Integrating by parts and using $p'(x) = -xp(x)$ we get
+$$
+\int_{\mathbb{R}} f'(x)g(x)p(x)\; dx = - \int_{\mathbb{R}} f'(x) (g(x)p(x))'\; dx =
+\int_{\mathbb{R}} f(x) \delta g(x)p(x)\; dx.
+$$
+\end{proof}
+
+\end{frame}
+
+
+\begin{frame}{Finite-dimensional case}
+
+Consider the probability space $(\Omega, \mathcal{F}, P)$ is such that $\Omega$ = $\mathbb{R}^n$, $F = \mathcal{B}(\mathbb{R}^n)$ is the Borel $\sigma$-algebra of $\mathbb{R}^n$, and $P$ is the standard Gaussian probability. In this framework we consider, as before, two differential operators. The first is the derivative operator, which is simply the gradient of a differentiable function $F: \mathbb{R}^n \rightarrow \mathbb{R}$:
+
+$$
+\nabla F = \left(\dfrac{\partial F}{\partial x_1}, \ldots, \dfrac{\partial F}{\partial x_n}\right)
+$$
+
+The second differential operator is the divergence operator and is defined on differentiable
+vector-valued functions $u: \mathbb{R}^n \rightarrow \mathbb{R}^n$ as follows: 
+$$
+\delta(u) = \sum_{i=1}^{n} \left(u_i x_i - \dfrac{\partial u_i}{\partial x_i}\right)
+$$
+
+\end{frame}
+
+
+\begin{frame}{Finite-dimensional case}
+\begin{proposition}
+The operator $\delta$ is the adjoint of $\nabla$; that is, $\mathbb{E}(\langle u, \nabla F\rangle) = \mathbb{E}(F \delta(u))$
+if $F: \mathbb{R}^n \rightarrow \mathbb{R}$ and $u: \mathbb{R}^n \rightarrow \mathbb{R}^n$ are continuously differentiable functions which, together with their partial derivatives, have at most polynomial growth.
+\end{proposition}
+\begin{proof}
+Integrating by parts, and using $\dfrac{\partial p}{\partial x_i} = -x_ip$, we obtain
+$$
+\int_{\mathbb{R}^n} \langle u, \nabla F\rangle p\; dx = \sum_{i=1}^{n} \int_{\mathbb{R}^n} \dfrac{\partial F}{\partial x_i} u_i p\; dx = 
+$$
+$$
+= \sum_{i=1}^{n} \left(-\int_{\mathbb{R}^n} F \dfrac{\partial u_i}{\partial x_i}p\; dx + \int_{\mathbb{R}^n} Fu_ix_ip\; dx \right) = \int_{\mathbb{R}^n} F \delta(u)p\; dx.
+$$
+\end{proof}
+
+\end{frame}
+
+
+\begin{frame}{Recap. Brownian motion}
+\begin{mydef}
+A real-valued stochastic process $B = (B_t), \,\,t\ge0$ defined on a probability space $(\Omega, \mathcal{F}, \mathbb{P})$ is called a Brownian motion if it satisfies the following conditions:
+\begin{itemize}
+    \item a.s. $B_0 = 0$ 
+    \item $\forall \,\,0 \leq t_1 < ... < t_n$ the increments $B_{t_n} - B_{t_{n-1}},..., B_{t_2} - B_{t_{1}}$ are independent random variables
+    \item if $0 \leq s \leq t$, the increment $B_t - B_s$ is a Gaussian random variable with mean zero and variance $t - s$
+    \item a.s. the map $t \rightarrow B_t$ is continuous
+\end{itemize}
+\end{mydef}
+\end{frame}
+
+\begin{frame}{Wiener integral}
+We next define the integral of square integrable functions with respect to Brownian motion.
+\begin{mydef}[Wiener integral of a step function]
+    Consider the set of step functions $\mathscr{G}_0 \subset L^2(\mathbb{R}_{+})$:
+    $$\varphi_t = \sum_{j=0}^{n-1}a_j\,\mathbb{I}_{(t_j,t_{j+1}]}(t),\,\, t \ge 0$$
+    $$where\,\, n \in \mathbb{N} \setminus \{0\}, \,\, a_j \in \mathbb{R} \,\, and \,\, 0 = t_0 < ... < t_n $$
+    The Wiener integral of a step function is defined by
+    $$\int_{\mathbb{R}_{+}}\varphi_tdB_t = \sum_{j=0}^{n-1}a_j\,(B_{t_{j+1}} - B_{t_j})$$
+\end{mydef}
+
+\end{frame}
+
+
+\begin{frame}{Wiener integral}
+
+\begin{proposition}
+     The mapping  $\varphi \rightarrow \int_{\mathbb{R}_{+}}\varphi_tdB_t$ from $\mathscr{G}_0$ to $L^2(\Omega)$ is linear and isometric (distance preserving) \\
+\end{proposition}
+\begin{proof}
+    $$\mathbb{E} \left(\int_{\mathbb{R}_{+}}\varphi_tdB_t \right) = \sum_{j=0}^{n-1}a_j\,\mathbb{E}(B_{t_{j+1}} - B_{t_j}) = 0$$
+$$\mathbb{E} \left(\left(\int_{\mathbb{R}_{+}}\varphi_tdB_t \right)^2\right) = \sum_{j=0}^{n-1}a_j^2\,(t_{j+1} - t_j) = \int_{\mathbb{R}_{+}}\varphi_t^2dt = \|\varphi\|^2_{L^2(\mathbb{R}_{+})}$$
+\end{proof}
+
+\end{frame}
+
+\begin{frame}{Wiener integral}
+\begin{proposition}
+
+ The space $\mathscr{G}_0$ is a dense subspace of $L^2(\mathbb{R}_{+})$. Therefore the mapping can be extended to a linear isometry between $L^2(\mathbb{R}_{+})$ and the Gaussian subspace of $L^2(\Omega)$ spanned by the Brownian motion. 
+\end{proposition}
+\begin{mydef}
+    Consider a sequence $\varphi_n$ of step functions from $\mathscr{G}_0$ such that $\varphi_n \rightarrow \varphi$ in $L^2(\mathbb{R}_{+}) $ i.e. $\int_{\mathbb{R}_{+}} (\varphi_n(t) - \varphi(t))^2dt \rightarrow 0$ \\
+
+    Then we define the integral of a function $\varphi \in L^2(\mathbb{R}_{+})$ as $$\int_{\mathbb{R}_{+}}\varphi(t)dB_t := \lim_{n\to\infty}\int_{\mathbb{R}_{+}}\varphi_n(t)dB_t$$
+    $\limits$
+It is a Gaussian random variable with mean zero and variance $\|\varphi\|^2_{L^2(\mathbb{R}_{+})}$
+\end{mydef}
+
+\end{frame}
+
+
+\begin{frame}{Malliavin derrivative}
+Let $B = (B_t)_{t \geq 0}$ be a Brownian motion on a probability space $(\Omega, \mathcal{F}, P)$ such that $\mathcal{F}$ is the $\sigma$-algebra generated by $B$. Set $H = L^2(\mathbb{R}_+)$, and for any $h \in H$, consider the Wiener integral
+$$
+B(h) = \int_{0}^{\infty} h(t) dB_t.
+$$
+
+Let now $\mathscr{W} \subset L^2 (\Omega, P)$ denote the set of all random variables $F$ such that there exists $N \geq 0$, a function $f: \mathbb{R}^N \rightarrow \mathbb{R}$ which, together with its derivatives, grows at most polynomially at infinity, and elements $h_i \in H$ such that
+$$
+F = f(B(h_1),\ldots ,B(h_n)).
+$$
+
+
+\end{frame}
+
+%\begin{mydef}[Cylindrical random variable]
+%A cylindrical random variable $X$ on a Hilbert space $H$ is a continuous linear mapping $X: H %\rightarrow L^2 (P)$.
+%\end{mydef}
+%% We start by defining the derivative in a dense subset of $L^2(\Omega)$. 
+%% More precisely, consider the set $S$ of smooth and cylindrical random variables of the form
+%% $F = f(B(h_1),\ldots ,B(h_n))$, where $f \in C_p^\infty(\mathbb{R}^n)$ and $h_i \in H$.
+
+%% The Hilbert space H plays a basic role in the definition of the derivative operator. In fact, the derivative of a random variable F : Ω → R takes values in H, and (DtF)t≥0 is a stochastic process in L2(Ω; H).
+
+
+
+\begin{frame}{Malliavin derivative}
+\begin{itemize}
+    \item We want some natural properties from a thing which is called a derivative
+    \item $D_t(B(h)) = h(t)$
+    \item Satisfying a chain rule
+\end{itemize}
+\begin{mydef}[Malliavin derivative]
+If $F \in \mathscr{W}$ the derivative $DF$ is the $H$-valued random variable defined by:
+$$
+D_tF = \sum_{i=1}^{n} \dfrac{\partial f}{\partial x_i} (B(h_1), \ldots, B(h_n))h_i(t)
+$$
+For instance, $D(B(h)) = h$.
+\end{mydef}
+
+\end{frame}
+
+
+\begin{frame}{Malliavin directional derivative}
+\begin{mydef}[Cameron-Martin space]
+Cameron-Martin space $H^1 \subset \Omega$ is the set of functions of the form 
+$$
+\psi(t) = \int_{0}^{t} h_s\; ds
+$$
+where $h \in H$.
+\end{mydef}
+
+\begin{mydef}[Malliavin directional derivative]
+Consider the Cameron-Martin space, then for $h \in H$, $\langle DF,h\rangle_H$ is the derivative of $F$ in the direction of $\psi(t)$:
+$$
+\langle DF,h\rangle_H = \int_{0}^{T} h_t D_t F\; dt = \dfrac{d}{d\varepsilon}F(\omega + \varepsilon\int_{0}^Th_sds)|_{\varepsilon=0}
+$$
+\end{mydef}
+\end{frame}
+
+\begin{frame}{Malliavin directional derivative}
+\begin{mydef}[Divergence]
+Denote by $S_H$ the class of stochastic processes $u = (u_t)_{t \geq 0}$ of the form 
+$$
+u_t = \sum_{j=1}^{n} F_jh_j(t),
+$$
+where $F_j \in \mathscr{W}$ and $h_j \in H$.
+Then the divergence of an element $u_t$ is a random variable given by
+$$
+\delta(u) = \sum_{j=1}^{n} F_jB(h_j) - \sum_{j=1}^{n} \langle DF_j,h_j\rangle_H
+$$
+\end{mydef}
+
+\end{frame}
+
+\begin{frame}{Malliavin directional derivative}
+\begin{proposition}
+Let $F \in \mathscr{W}$ and $u \in S_H$, then:
+$$
+\mathbb{E}(F \delta(u)) = \mathbb{E} (\langle DF,u\rangle_H).
+$$
+\end{proposition}
+Which is obvious from the proposition for operator $\delta$.
+\end{frame}
+
+\begin{frame}{Martingale representation theorem}
+\begin{theorem}
+Let $B$ be a standard Brownian motion defined on a probability space ${(\Omega,\mathcal{F},{\mathbb P})}$ and ${\{\mathcal{F}_t\}_{t\ge 0}}$ be its natural filtration.
+Then, every ${\{\mathcal{F}_t\}}$---local martingale M can be written as
+$$
+M = \mathbb{E}(M) + \int\xi\,dB,
+$$ 
+for a predictable, $B$-integrable, process ${\xi}$.
+\end{theorem}
+\end{frame}
+
+
+\begin{frame}{Clark-Ocone formula}
+The next result expresses the integrand of the integral representation theorem of a square integrable random variable in terms of the conditional expectation of its Malliavin derivative.
+\begin{mydef}[Clark-Ocone formula]
+Let $F \in D^{1,2} \cap L^2 (\Omega, \mathcal{F}_T, P)$. Then $F$ admits the following representation:
+$$
+F = \mathbb{E} (F) + \int_{0}^{T} \mathbb{E} (D_tF | \mathcal{F}_t) dB_t
+$$
+\end{mydef}
+
+\end{frame}
+\begin{frame}{Clark-Ocone formula. Proof}
+
+\begin{proof}
+\\
+\begin{itemize} 
+\item By the integral representation theorem:
+$$F = \mathbb{E}(F) + \int_{0}^{T} u_t dB_t $$
+\item Consider a process $v \in L^2_{T}(P)$. On the one hand, the isometry property yields (exercise)
+$$\mathbb{E}(\delta(v)F) = \int_{0}^{T} \mathbb{E}(v_s u_s) ds$$ 
+\end{itemize}
+\end{proof}
+
+\end{frame}
+\begin{frame}{Clark-Ocone formula. Proof}
+
+\begin{proof}
+\\
+\begin{itemize} 
+\item On the other hand, by the duality relationship (Proposition on slide 15), and taking into account that v is progressively measurable,
+$$\mathbb{E}(\delta(v)F) = \mathbb{E}\left(\int_{0}^{T} v_tD_tFdt\right) = \int_{0}^{T} \mathbb{E}(v_t\mathbb{E}(D_tF|\mathcal{F}_t))dt$$
+Therefore $u_t = \mathbb{E}(D_tF|\mathcal{F}_t)$ for almost all $(t, \omega) \in [0, T] \times \Omega$ which concludes the proof. 
+\end{itemize}
+\end{proof}
+
+\end{frame}
+
+
+\begin{frame}{Applications. Clark-Ocone formula to Black-Scholes}
+\begin{proposition}
+\begin{itemize}
+
+\item Consider a market consisting of one stock (risky asset) and one bond (risk-less asset). Assume that the price process $(S_t)_{t\ge0}$ follows a Black-Scholes model with constant coefficients $\sigma > 0$ and $\mu$, that is, 
+$$S_t = S_0exp\left(\left(\mu - \dfrac{\sigma^2}{2}\right)t + \sigma B_t\right)$$
+where $B = (B_t)_{t \in [0, T]}$ is a Brownian motion difined in a complete probability space $(\Omega, \mathcal{F}, P)$ 
+\item $(\mathcal{F}_t)_{t \in [0, T]}$ the filtration generated by the Brownian motion and completed by the P-null sets. By Ito formula we obtain that $S_t$ satisfies a linear stochastic differential equation $$dS_t = \mu S_tdt + \sigma S_t dB_t$$
+\end{itemize}
+\end{proposition}
+\end{frame}
+
+\begin{frame}{Applications. Clark-Ocone formula to Black-Scholes}
+\begin{proposition}
+\begin{itemize}
+
+\item The coefficient $\mu$ is the mean return rate and $\sigma$ is the volatility. The price of the bond at time t is $e^{rt}$, where r is the interest rate. 
+\item Consider an investor who starts with some initial endowement $x \ge 0$ and invests in the assets described above. Let $\alpha_t$ be the number of non-risky assets and $\beta_t$ the number of stocks owned by the investor at time t. The couple $\phi_t = (\alpha_t, \beta_t), t \in [0, T]$ is called a portfolio, and we assume that the process $\alpha_t$ and $\beta_t$ are measurable and adapted processes such that 
+$$\int_0^{T}\beta_t^2 dt < \infty, \,\, \int_0^{T}|\alpha_t| dt < \infty$$
+\end{itemize}
+\end{proposition}
+\end{frame}
+
+\begin{frame}{Applications. Clark-Ocone formula to Black-Scholes}
+\begin{proposition}
+\begin{itemize}
+
+\item Then the value of the portfolio at time t is 
+$$V_t(\phi) = \alpha_t e^{-rt} + \beta_t S_t$$
+We say that the portfolio $\phi$ is self-financing if
+$$V_t(\phi) = x + r\int_0^{t}\alpha_s e^{-rs}ds + \int_{0}^t\beta_s dS_s$$
+From now on we will consider only self-financing portfolios. Discounted value of a self-financing portfolio
+$$\tilde{V}_t(\phi) = e^{-rt}V_t(\phi) = x + \int_{0}^t\beta_s d\tilde{S}_s$$
+where $\tilde{S}_t = e^{-rt} S_t$
+\end{itemize}
+\end{proposition}
+\end{frame}
+
+\begin{frame}{Applications. Clark-Ocone formula to Black-Scholes}
+\begin{proposition}
+\begin{itemize}
+
+\item Notice that $$d\tilde{S}_t = (\mu - r)\tilde{S}_tdt + \sigma \tilde{S}_t dB_t$$
+\item Set $\theta = \dfrac{\mu - r}{\sigma}$ Consider the martingale measure defined on $\mathcal{F}_T$, by 
+$$\dfrac{dQ}{dP} = exp\left(-\thetta B_t - \dfrac{\theta^2}{2}\right)$$
+\item Under Q $W_t = B_t + \theta t$ is a Brownian motion and the discounted price process $\tilde{S}_t$ is a martingale because
+$$d\tilde{S}_t = \sigma \tilde{S}_t dW_t$$
+\end{itemize}
+\end{proposition}
+\end{frame}
+
+\begin{frame}{Applications. Clark-Ocone formula to Black-Scholes}
+\begin{proposition}
+\begin{itemize}
+
+\item Suppose that $F \ge 0$ is an $\mathcal{F}_t$ - measurable such that $E_{Q}(F^2) < \infty$. It represents the payoff of some derivative. We say that F can be replicated if there exists a self-financing portfolio $\phi$ such that $V_{T}(\phi) = F$. The Ito integral representaion theorem implies that any derivative is replicable, and this means that the Black-Scholes market is complete. It sufficies to write
+$$e^{-rT}F = E_{Q}(e^{-rT}F) + \int_{0}^{T} u_sdW_s$$
+and take the self-financing portfolio $\phi_t = (\alpha_t, \beta_t)$, where $\beta_t = \dfrac{u_t}{\sigma \tilde{S}_t}$
+\item The price of a derivative with payoff F at time $t \leq T$ is given by the value at time t of a self-financing portfolio which replicates F. Then $V_t(\phi)  = e^{-r(T-t)}E_{Q}(F|\mathcal{F}_t)$ 
+\end{itemize}
+\end{proposition}
+\end{frame}
+
+\begin{frame}{Applications. Clark-Ocone formula to Black-Scholes}
+\begin{proposition}
+\begin{itemize}
+
+\item In this section we discuss the application of Clark-Ocone formula to find explicit formulas for a replicating portfolio in the Black-Scholes model. Suppose that $F \in \mathbb{D}^{1,2}$. Then, applying Clark-Ocone's formula we obtain 
+$$\beta_t = \dfrac{e^{-r(T-t)}}{\sigma S_t}E_Q(D_tF|\mathcal{F}_t)$$
+\item We can consider different derivatives with their payoffs and obtain explicit formulas
+\end{itemize}
+\end{proposition}
+\end{frame}
+
+
+\end{document}
