@@ -30,6 +30,7 @@ Here we store lectures and tasks of the Club.
 
 13) January 15, 2023 - Semimartingales and Girsanov's Theorem (Nikolai Averianov, Nikita Orlov)
 
+14) September 23, 2023 - Intro to Malliavin calculus (Anton Makarov, Maksim Abraham)
 #### Founders of the Club:
 Nikolai Averianov ([GitHub](https://github.com/debasering), [Telegram](https://t.me/debasering))  
 Alexander Plakhin ([GitHub](https://github.com/aaplakhin), [Telegram](https://t.me/ipomeya31))
