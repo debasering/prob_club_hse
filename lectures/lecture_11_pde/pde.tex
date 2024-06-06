@@ -1,0 +1,559 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}     % Allows input encoding of Cyrillic characters
+\usepackage[T2A]{fontenc}       % Cyrillic font encoding
+\usepackage[russian,english]{babel}  % Language support for Russian and English
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+
+\title{Partial Differential Equations from Probabilistic Perspective}
+\subtitle{HSE FES Probability Theory Club}
+\author{Sergei Tikhonov}
+\date{June 2, 2024}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Big picture of PDE}
+
+\begin{frame}
+
+Big Picture of PDE
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Big picture of PDE}
+
+Оператор Лапласа:
+
+\[
+\Delta := \frac{\partial^2}{\partial x_1^2} + ... + \frac{\partial^2}{\partial x_n^2} \quad \quad \quad n \geq 1
+\]
+
+Три важных линейных уравнения:
+
+\begin{itemize}
+    \item Laplace Equation:
+\end{itemize}
+\[
+- \Delta u(x) = 0
+\]
+
+\begin{itemize}
+    \item Heat Equation:
+\end{itemize}
+\[
+\frac{\partial}{\partial t} u(t, x) - \Delta u(t, x) = 0
+\]
+
+\begin{itemize}
+    \item Wave Equation:
+\end{itemize}
+\[
+\frac{\partial^2}{\partial t^2} u(t, x) - \Delta u(t, x) = 0
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Big picture of PDE}
+
+PDE второго порядка:
+
+\[
+A u_{xx} + 2B u_{xy} + C u_{yy} + D u_{x} + E u_{y} + F = 0
+\]
+
+\begin{itemize}
+    \item Elliptic PDE: $B^2 - AC < 0$
+    \item Parabolic PDE: $B^2 - AC = 0$
+    \item Hyperbolic PDE: $B^2 - AC > 0$
+\end{itemize}
+
+С прошлого слайда:
+
+Laplace eq: \( A = 1 \), \( B = 0 \), \( C = 1 \), \( D = 0 \), \( E = 0 \), \( F = 0 \).
+
+Heat eq: \( A = 1 \), \( B = 0 \), \( C = 0 \), \( D = 0 \), \( E = -1 \), \( F = 0 \)
+
+Wave eq: \( A = 1 \), \( B = 0 \), \( C = -1 \), \( D = 0 \), \( E = 0 \), \( F = 0 \)
+
+\;
+
+Коэффициенты могут зависеть от $x$ и $t$, тогда вышеописанные условия должны быть выполнены для любых $x$ и $t$ из домейна
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Big picture of PDE}
+
+\begin{itemize}
+    \item "Weak"\ solutions
+\end{itemize}
+
+Иногда решение PDE или его производные не существуют pointwise (теория построенная на пространствах Соболева)
+
+\begin{itemize}
+    \item Euler Lagrange equations
+\end{itemize}
+
+Вместо решения PDE будем решать оптимизационную задачу (теория построенная на вариационном исчислении)
+
+\end{frame}
+
+
+\begin{frame}
+
+Black Scholes Equation
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Уравнение Блэка Шоулза}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\textwidth]{BS.jpeg}
+    \caption{Блэк, Шоулз, Мертон}
+\end{figure}
+\end{frame}
+
+
+\section{Black Scholes Equation}
+\begin{frame}
+\frametitle{Уравнение Блэка Шоулза}
+
+\[ \!\!\!\! \partial_t C(t, s) + r s \partial_s C(t, s) + \frac{1}{2} \sigma^2 s^2 \partial_{ss} C(t, s) = r C(t, s) \quad \quad s \in \mathbb{R}_+ \; t \in [0, T)\]
+
+С терминальным условием \(F(T, s)\): 
+
+\begin{itemize}
+    \item для европейского опциона кол \(F(T, s) = \max(s(T) - K, 0)\);
+    \item для европейского опциона пут \(F(T, s) = \max(K - s(T), 0)\);
+\end{itemize}
+
+Здесь:
+
+\begin{itemize}
+    \item $s(t)$ - цена базового актива (бездивидендная акция)
+    \item $C(t, s)$ - цена опциона
+    \item T - момент экспирации
+    \item K - страйк 
+    \item r - ставка дисконтирования
+    \item $\sigma$ - волатильность
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Решение уравнения Блэка Шоулза для опциона колл}
+
+Пусть $\Phi(\cdot)$ функция стандартного нормального распределения, тогда решением уравнения Блэка Шоулза с payoff колл опциона:
+
+\[
+C(t, s) = s \Phi(d_1) - K e^{-r(T - t)} \Phi(d_2)
+\]
+where
+
+\[
+d_1 = \frac{\log \bigg(\frac{s e^{r(T - t)}}{K}\bigg)}{\sigma \sqrt{T - t}} + \frac{\sigma \sqrt{T - t}}{2} 
+\]
+\[
+d_2 = \frac{\log \bigg(\frac{s e^{r(T - t)}}{K}\bigg)}{\sigma \sqrt{T - t}} - \frac{\sigma \sqrt{T - t}}{2} 
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Решение уравнения Блэка Шоулза}
+
+Для "произвольного" терминального условия:
+
+\[
+C(t, s) = e^{-r(T-t)} \mathbb{E}^Q[F(T, S_T) \mid S_t = s]
+\]
+
+где \(Q\) - риск нейтральная мера.
+
+\,
+
+В самой модели мы предполгаем что цена акции имеет GBM динамику:
+
+\[
+d S_t = \mu S_t dt + \sigma S_t d W_t \quad \quad S_0 = s_0
+\]
+
+\end{frame}
+
+
+\subsection{Probabilistic Representation of Black Scholes solution}
+\begin{frame}
+\frametitle{Формула Фейнмана Каца}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.45\textwidth]{Richard_Feynman_Nobel.jpg}
+    \hfill
+    \includegraphics[width=0.45\textwidth]{Mark_Kac.jpg}
+    \caption{Слева: Ричард Фейнман. Справа: Марк Катц}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Обозначения}
+
+Пусть \(S_t\) цена базового актива:
+
+\[ dS_t = m(t, S_t) dt + \sigma(t, S_t) dW_t \quad S_0 = s_0 \]
+
+Пусть \(R_t\) динамика процентных ставок:
+
+\[d R_t = r(t, S_t) R_t dt\]
+
+В "классической"\ модели Блэка Шоулза:
+
+\[m(t, S_t) = \mu S_t \quad \quad \sigma(t, S_t) = \sigma S_t \quad \quad r(t, S_t) = r\]
+
+Заметим, что динамика процентных ставок является ODE, и для классического случая имеем:
+
+\[R_t = e^{rt}\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Идея формулы Фейнмана Каца}
+
+Метод решения PDE с помощью аналитического вычисления математического ожидания / симуляций траекторий случайного процесса. Обратное тоже верно: важный класс математических ожиданий случайных процессов может быть вычислен как решения детерминированных моделей.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Формула Фейнмана Каца}
+
+Теорема (Фейнман-Кац формула). Пусть \(S_t\) удовлетворяет
+
+\[ dS_t = m(t, S_t) dt + \sigma(t, S_t) dW_t \quad S_0 = s_0 \]
+
+и \(r(t, s) \geq 0\) является ставкой дисконтирования. Пусть payoff \(F\) в момент времени \(T\) удовлетворяет \(\mathbb{E}[|F(S_T)|] < \infty\). Если \(C(t, s)\), \(0 \le t \le T\) определяется как:
+
+\[ C(t, s) = \mathbb{E}\bigg[\frac{R_t}{R_T} F(S_T)\, \bigg|\, S_t = s\bigg]\]
+
+причём \(C(t, s)\) является \(C^1\) по \(t\) и \(C^2\) по \(x\), то \(C(t, s)\) является решением PDE:
+
+\[ \partial_t C(t, s) + m(t, s) \partial_s C(t, s) + \frac{1}{2} \sigma(t, s)^2 \partial_{ss} C(t, s) = r(t, s) C(t, s) \]
+
+для \(0 \le t < T\), с терминальным условием \(C(T, s) = F(s)\).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство формулы Фейнмана Каца}
+
+Рассмотрим дисконтированный payoff $Y = R_T^{-1} F(S_T)$. Что можно сказать о $M_t = \mathbb{E}(Y \mid \mathcal{F}_t)$? $M_t$ является мартингалом (используем tower rule):
+
+\[
+\mathbb{E}(M_t \mid \mathcal{F}_s) = \mathbb{E}(\mathbb{E}(Y \mid \mathcal{F}_t)\mid \mathcal{F}_s) = \mathbb{E}(Y \mid \mathcal{F}_s) = M_s
+\]
+
+Более того, можем записать явную форму:
+
+\[
+\!\!\!\!\!\!\!\!\!\!\! M_t = \mathbb{E}(Y \mid \mathcal{F}_t) = \mathbb{E}(R_T^{-1} F(S_T) \mid \mathcal{F}_t) = 
+\mathbb{E}\bigg[ \frac{1}{R_t} \frac{R_t}{R_T} F(S_T) \bigg| \mathcal{F}_t\bigg] = R_t^{-1} C(t, s)
+\]
+
+Хотим рассмотреть $M_t = R_t^{-1} C(t, s)$ через product rule и формулу Итô.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство формулы Фейнмана Каца}
+
+Product rule для случайных процессов (доказывается путём рассмотрения формулы Ито для $f(X_t, Y_t) = X_t Y_t$): 
+\[
+d(X_t Y_t) = X_t dY_t + Y_t d X_t + (d X_t) (d Y_t)
+\]
+
+Обратите внимание, что если $X_t$ и/или $Y_t$, представленные в виде процесса Ито, не содержат диффузии, то $(d X_t) (d Y_t)$ автоматически $0$.
+
+В нашем случае:
+
+\[
+d(R_t^{-1}C(t, S_t)) = R_t^{-1} d C(t, S_t) + C(t, S_t) d R_t^{-1} + \underbrace{(d R_t^{-1})(d C(t, S_t))}_{=0}
+\]
+
+Осталось применить Ито для $C(t, S_t)$ и посчитать "обычный"\ дифференциал для $R_t^{-1}$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство формулы Фейнмана Каца}
+
+Так как мы предположили что \(C(t, s)\) является \(C^1\) по \(t\) и \(C^2\), можем применить Ито для $C(t, S_t)$:
+
+\[
+d C(t, S_t) = \dot{C}(t, S_t)dt + C'(t, S_t) d S_t + \frac{1}{2}C''(t, S_t) (d S_t)^2 = 
+\]
+\[
+= [\dot{C}(t, S_t) + m(t, S_t)C'(t, S_t) + \frac{1}{2} \sigma^2(t, S_t)C''(t, S_t)] dt +
+\]
+\[
++ C'(t, S_t) \sigma(t, S_t)d W_t
+\]
+
+И дифференциал $d[R_t^{-1}]$:
+\[
+\frac{d}{dt} \frac{1}{R_t} = - \frac{1}{R_t^2} d R_t = -\frac{1}{R_t}r(t, S_t) dt = - R_t^{-1} r(t, S_t) dt
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство формулы Фейнмана Каца}
+
+Подставим в product rule:
+
+\[
+d(R_t^{-1} C(t, S_t)) = R_t^{-1} [(\dot{C}(t, S_t) + m(t, S_t)C'(t, S_t) +
+\]
+\[
++ \frac{1}{2} \sigma^2(t, S_t)C''(t, X_t)) dt + C'(t, S_t) \sigma(t, S_t)d W_t] - R_t^{-1} r(t, S_t) C(t, S_t) dt 
+\]
+
+Выносим $R_t^{-1}$ за скобки и группируем слагаемые:
+
+\[
+d(R_t^{-1} C(t, S_t)) = [\dot{C}(t, S_t) +  m(t, S_t)C'(t, S_t) + \frac{1}{2} \sigma^2(t, S_t)C''(t, S_t) 
+\]
+\[
+- r(t, S_t) C(t, S_t)] dt + C'(t, S_t) \sigma(t, S_t)d W_t
+\]
+
+Но мы показали, что \(R_t^{-1} C(t, S_t)\) - мартингал, а для мартингала дрифт равен $0$...
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Важная лемма}
+
+Процесс Итô \(X_t\)
+
+\[ dX_t = m(t, X_t) dt + \sigma(t, X_t) dW_t \]
+
+является (локальным) мартингалом тогда и только тогда когда коэффициент при dt, дрифт, равен 0 почти наверное:
+
+\[m(t, X_t) = 0 \quad \quad \quad \text{ a.s.}\]
+
+
+Важно: каждый мартингал является локальным мартингалом, но не каждый локальный мартингал является мартингалом.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство важной леммы}
+
+Запишем процесс Итô \(X_t\) в интегральной форме: 
+
+\[
+X_t = X_0 + \int_0^t m(s, X_s) \, ds + \int_0^t \sigma(s, X_s) \, dW_s.
+\]
+
+Запишем определение мартингала:
+
+\[
+\mathbb{E}[X_t | \mathcal{F}_s] = \mathbb{E}\left[X_0 + \int_0^t m(u, X_u) \, du + \int_0^t \sigma(u, X_u) \, dW_u \bigg| \mathcal{F}_s\right] = 
+\]
+
+\[
+= \underbrace{X_0 + \int_0^s m(u, X_u) \, du + \int_0^s \sigma(u, X_u) \, dW_u}_{X_s} +
+\]
+
+\[+ \mathbb{E}\bigg[\int_s^t m(u, X_u) \, du + \int_s^t \sigma(u, X_u) \, dW_u\bigg| \mathcal{F}_s\bigg] = 
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Доказательство важной леммы}
+
+Применим теорему Фубини для первого слагаемого, и определение интеграла Ито для второго слагаемого:
+
+\[
+= X_s + \mathbb{E}\bigg[ \int_s^t m(u, X_u) \, du \bigg| \mathcal{F}_s \bigg] + \underbrace{\mathbb{E}\bigg[\int_s^t \sigma(u, X_u) \, dW_u \bigg| \mathcal{F}_s \bigg]}_{0 \text{ по определению}} 
+\]
+\[
+= X_s + \int_s^t \mathbb{E}[m(u, X_u) \mid \mathcal{F}_s] \, du = X_s
+\]
+Чтобы последнее равенство было выполнено, условие $m(t, X_t) = 0$ почти наверное для любого $t$ должно быть удовлетворено. 
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Проблема}
+
+В результате получили:
+
+\[ \partial_t C(t, s) + m(t, s) \partial_s C(t, s) + \frac{1}{2} \sigma(t, s)^2 \partial_{ss} C(t, s) = r(t, s) C(t, s) \]
+
+В классической версии Блэка Шоулза:
+
+\[
+m(t, x) = \mu s \quad \quad \sigma(t, s) = \sigma s \quad \quad r(t, x) = r
+\]
+
+Полученное уравнение не является уравнением Блэка Шоулза:
+
+\[ \partial_t C(t, s) + \mu s \partial_s C(t, s) + \frac{1}{2} \sigma^2 s^2 \partial_{ss} C(t, s) = r C(t, s) \]
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Теорема Гирсанова (чёрный ящик нашей лекции)}
+
+Решение? Теорема Гирсанова... Гарантирует, что существует мера $Q$ такая что $W_t^Q$ будет являться Броуновским движением под мерой $Q$:
+
+\[d W_t = A_t dt + d W_t^Q\]
+
+Возьмём $A_t = \frac{r - \mu}{\sigma}$ и подставим $d W_t$ в:
+
+\[ dS_t = \mu S_t dt + \sigma S_t dW_t \]
+
+Получим:
+
+\[ dS_t = r S_t dt + \sigma S_t dW_t^Q \]
+
+Фейнман Кац применим, но теперь ожидание будет вычисляться под мерой $Q$:
+
+\[ C(t, s) = \mathbb{E}^Q\bigg[\frac{R_t}{R_T} F(S_T)\, \bigg|\, S_t = s\bigg] = e^{-r(T-t)} \mathbb{E}^Q[F(S_T) \mid S_t = s] \]
+
+
+\end{frame}
+
+\subsection{Fourier Transform}
+
+\begin{frame}
+
+Fourier Transform
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Замены}
+
+С помощью сложных и совершенно неинтуитивных замен мы можем показать, что изначальное уравнение Блэка Шоулза эквивалентно Heat equation (достаточно решить для \(V(\tau, x)\)):
+
+
+\[
+\frac{\partial V}{\partial \tau} = \frac{\partial^2 V}{\partial x^2}, \quad x \in \mathbb{R}, \ \tau \in [0, \sigma^2 T / 2],
+\]
+
+\[
+S = K e^x,
+\]
+
+\[
+\tau = (T - t) \sigma^2 / 2,
+\]
+
+\[
+C(S, t) = K e^{-(a^2 / 4 + a + 1) \tau} e^{-(a / 2) x} V(x, \tau),
+\]
+
+\[
+a = 2r / \sigma^2 - 1.
+\]
+
+Поскольку удалось избавиться от постоянных коэффициентов, можем применить преобразование Фурье и воспользоваться его свойствами. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Преобразование Фурье}
+
+Определение:
+
+\[ \hat{u}(\xi) = \mathcal{F} [u](\xi) = \int_\mathbb{R} e^{-ix \xi} u(x)dx\]
+
+\[ u(x) = \mathcal{F}^{-1} [\hat{u}](x) = \frac{1}{2\pi}\int_\mathbb{R} e^{ix \xi} \hat{u}(\xi)d\xi\]
+
+Полезные свойства для решения PDE:
+
+\[ \mathcal{F}\{af(x) + bg(x)\} = a\hat{f}(\xi) + b\hat{g}(\xi) \]
+
+\[ \mathcal{F}\left\{\frac{d^n f(x)}{dx^n}\right\} = (i\xi)^n \hat{f}(\xi) \]
+
+\[ \mathcal{F}\{f(x) * g(x)\} = \hat{f}(\xi) \hat{g}(\xi) \]
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Решение PDE с помощью преобразования Фурье}
+
+Применим преобразование фурье к $V(\tau, x)$ по переменной $x$:
+
+\[
+\mathcal{F}\bigg[\frac{\partial V}{\partial \tau} (\tau, x)\bigg] = \frac{\partial}{\partial \tau} \mathcal{F}\bigg[V(\tau, x)\bigg] = \frac{\partial}{\partial \tau} \hat{V}(\tau, \xi)
+\]
+
+\[
+\mathcal{F}\bigg[\frac{\partial^2 V}{\partial x^2} (\tau, x)\bigg] = -\xi^2 \hat{V}(\tau, \xi)
+\]
+
+\[
+\mathcal{F}[V(0, x)] = \hat{V}(0, \xi)
+\]
+
+Таким образом, получили ODE относительно $\tau$:
+
+\[
+\frac{\partial}{\partial \tau} \hat{V}(\tau, \xi) = -\xi^2 \hat{V}(\tau, \xi)
+\]
+ODE с разделяющимися переменными:
+\[
+\hat{V}(\tau, \xi) = \hat{V}(0, \xi) e^{-\xi^2 \tau}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Решение PDE с помощью преобразования Фурье}
+
+Применим обратное преобразование Фурье:
+
+\[
+\mathcal{F}^{-1}[\hat{V}(0, \xi)] = V(0, x)
+\]
+
+\[
+\Phi(x, t) = \mathcal{F}^{-1}[e^{-\xi^2 \tau}] = \frac{1}{\sqrt{4\pi \tau}} e^{-\frac{x^2}{4\tau}}
+\]
+
+Воспользуемся свойством о свёртке и запишем решение:
+
+\[
+V(\tau, x) = \int_\mathbb{R} \Phi(\tau, x-y)V(0, y) dy
+\]
+
+Заметим, что \(\Phi(x,\tau)\) является \(\Phi(x, \tau) > 0\) и \(\int_\mathbb{R} \Phi(x,\tau) dx = 1\). Значит, \(\Phi(x,\tau)\) является плотностью распределения. Более того, мы точно можем сказать, что \(X \sim N(0, 2\tau)\).
+
+
+\end{frame}
+
+
+
+
+\end{document}
