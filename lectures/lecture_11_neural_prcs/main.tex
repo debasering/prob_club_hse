@@ -1,0 +1,180 @@
+\documentclass{beamer}% тип документа
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel} 
+\usepackage{graphicx}
+\usepackage{hyperref}
+\theoremstyle{definition}
+\newtheorem{mytheor}[theorem]{Theorem}
+\newtheorem{reminder}{Reminder}
+\newtheorem{myproof}[proof]{Proof}
+\newtheorem{mydef}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Note}
+\newtheorem{myexample}[theorem]{Example}
+\newtheorem{blank}[blank]{}
+\newtheorem{mycoll}[theorem]{Corollary}
+
+\useoutertheme[footline=institutetitle]{miniframes}
+% далее идёт преамбула
+\title{Neural Processes}
+\author[Alexander Plakhin, Nikolai Averianov]{Alexander Plakhin, Nikolai Averianov}
+\institute[HSE FES Probability Theory Club]{HSE FES Probability Theory Club}
+\date{November 11, 2023}
+\usetheme{Madrid}
+\usepackage{graphics}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathcal{F}}
+\DeclareMathOperator{\Var}{\mathbb{V}ar}
+\DeclareMathOperator{\Cov}{\mathbb{C}ov}
+\DeclareMathOperator{\Corr}{\mathbb{C}orr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+% \newcommand\mytext{Условное матожидание}
+
+
+\usepackage{euscript}	 % Шрифт Евклид
+\usepackage{mathrsfs} % Красивый матшрифт
+
+ \makeatother
+ \setbeamercolor{footlinecolor}{bg=black!80,fg=white}
+\setbeamertemplate{footline}
+{%
+  \leavevmode%
+  \hbox{\begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm]{author in head/foot}%
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.5ex,dp=1.125ex,leftskip=.3cm,rightskip=.3cm plus1fil]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor\hfill\insertpagenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatletter
+
+
+
+
+
+\begin{document}  % начало презентации
+	
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Motivation}
+\begin{itemize}
+    \item Gaussian Processes Regression provides a probabilistic framework to impose prior distribution over a set of functions and update this distribution after observing the data
+    \item Obvious drawbacks are computational complexity ($\mathcal{O}(N^3)$) and limited expressiveness
+    \item Neural Processes is a similar framework which addresses the issues above
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Gaussian Processes Regression (Reminder)}
+\begin{itemize}
+    \item We assume that you know what is a Gaussian Processes Regression
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Stochastic processes}
+\begin{itemize}
+    \item Let's consider the process $F: \mathcal{X} \to \mathcal{Y}$ as a random function. We define distribution over $Y_{1:n} := (F(x_1), \ldots, F(x_n))$
+    \item Imagine we have a collection of distributions $\rho_{x_{1:n}}$. What are the conditions for this collection to define a stochatic process $F$?
+    \item Exchageability (for any permutation):
+    $$\rho_{x_1,\ldots, x_n}(y_1, \ldots, y_n)
+    = \rho_{x_{\pi(1)}, \ldots, x_{\pi(n)}}(y_{\pi(1)}, \ldots y_{\pi(n)})
+    $$
+    \item Consistency: 
+    $$
+    \rho_{x_{1:m}}(y_{1:m}) = 
+    \int \rho_{x_{1:n}}(y_{1:n}) dy_{m+1:n}
+    $$
+    \item These conditions are sufficient by the Kolmogorov Extension Theorem
+    \item We need to build a Neural Network that satisfies the conditions above
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Model Setup}
+    \begin{itemize}
+        \item Given a particular instantiation of the stochastic process $f$:
+        $$
+            \rho_{x_{1:n}}(y_{1:n}) = \int p(y_{1:n}|f, x_{1:n})p(f)df
+        $$
+        \item if we add noise: $Y_i \sim \mathcal{N}(F(x_i), \sigma^2)$:
+        $$
+        p(y_{1:n}|x_{1:n}) = \int p(f)\prod_{i=1}^n \mathcal{N}(y_i|f(x_i), \sigma^2)df
+        $$
+        \item Now we can do the following: let's assume that realization of the process depends on a global latent variable $z$ and parameterize $F(x)$ as a Neural Network $g_{\theta}(x, z)$:
+        $$
+        p(z, y_{1:n}|x_{1:n}) = p(z) \prod_{i=1}^n 
+        \mathcal{N}(y_i|g_{\theta}(x_i, z), \sigma^2)
+        $$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{ELBO}
+\begin{itemize}
+    \item Let $q$ be variational posterior parametrized by another NN. ELBO (expectations are w.r.t $q(z|x_{1:n}, y_{1:n})$):
+    $$
+    \log p(y_{1:n}|x_{1:n}) \geq 
+    \E\bigg[
+    \sum_{i=1}^n \log p(y_i|z, x_i) + 
+    \log \cfrac{p(z)}{q(z|x_{1:n}, y_{1:n})} 
+    \bigg]
+    $$
+    \item But for this problem we really care more about conditional sampling. So we have:
+    $$
+    \log p(y_{m+1:n}|x_{1:n}, y_{1:m}) \geq 
+    \E \bigg[
+    \sum_{i=m+1}^n \log p(y_i|z, x_i) + 
+    \log \cfrac{p(z|x_{1:m}, y_{1:m})}{q(z|x_{1:n}, y_{1:n})} 
+    \bigg]
+    $$
+    \item Of course we have no clue about $p(z|x_{1:n}, y_{1:m}) \Rightarrow$ we end up maximizing:
+    $$
+    \log p(y_{m+1:n}|x_{1:n}, y_{1:m}) \geq 
+    \E \bigg[
+    \sum_{i=m+1}^n \log p(y_i|z, x_i) + 
+    \log \cfrac{q(z|x_{1:m}, y_{1:m})}{q(z|x_{1:n}, y_{1:n})} 
+    \bigg]    
+    $$
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Architecture}
+    The model consist of several parts:
+    \begin{itemize}
+        \item Encoder $h$ that takes pairs $(x, y)_i$ and maps them to representation $r_i$
+        \item Aggregator $a$ that summarizes inputs and is order-invariant. We need a single global representation $r = a(r_1, \ldots, r_n)$ to parameterize $z \sim \mathcal{N}(\mu(r), \sigma^2(r)I)$. Note linear complexity of aggregator in case $a(r_1, \ldots, r_n) = \sum_{i=1}^n r_i$
+        \item Conditional decoder $g$ that takes new points $x$ and the sampled latent variable $z$
+    \end{itemize}
+    \includegraphics[scale=0.4]{architecture.png}
+\end{frame}
+
+\begin{frame}{Similar models}
+    \includegraphics[scale=0.4]{models.png}
+\end{frame}
+
+\begin{frame}{Results}
+    \includegraphics[scale=0.4]{1d-regression.png}
+    \includegraphics[scale=0.4]{results.png}
+\end{frame}
+
+\begin{frame}{Sources}
+\begin{enumerate}
+    \item Neural Processes -- https://arxiv.org/pdf/1807.01622.pdf
+    \item https://yanndubs.github.io/Neural-Process-Family/text/Intro.html
+    \item https://github.com/EmilienDupont/neural-processes
+\end{enumerate}
+\begin{enumerate}
+\end{enumerate}
+\end{frame}
+\end{document}
