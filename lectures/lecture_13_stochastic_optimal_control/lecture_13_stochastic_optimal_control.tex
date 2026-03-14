@@ -1,0 +1,696 @@
+\documentclass{beamer}
+\usetheme{Madrid}
+\useoutertheme[subsection=false]{smoothbars}
+\usecolortheme{default}
+
+\definecolor{smoothbarblue}{RGB}{38,38,134}
+\setbeamercolor{section in head/foot}{fg=white,bg=smoothbarblue}
+\usepackage{amssymb}
+
+\theoremstyle{definition}
+\newtheorem{mytheor}[theorem]{Theorem}
+\newtheorem{mydef}[theorem]{Definition}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{myexample}[theorem]{Example}
+
+\setbeamertemplate{navigation symbols}{}
+
+\title[Stochastic optimal control]{Stochastic optimal control}
+\author[Narek Sargsian, Ivan Khromyshchenko]{Narek Sargsian, Ivan Khromyshchenko}
+\institute[HSE FES]{HSE FES Probability Theory Club}
+\date{28 February 2026}
+\usepackage{graphicx}
+
+\usepackage{amsmath}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\plim}{plim}
+
+\usepackage{euscript}
+
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+      \insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.50\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+\insertshortauthor\hspace*{0.6em}(\insertshortinstitute)
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.25\paperwidth,ht=2.25ex,dp=1ex]{date in head/foot}%
+      \hbox to .25\paperwidth{%
+        \hbox to .18\paperwidth{\hfil\insertshortdate\hfil}%
+        \hbox to .05\paperwidth{\hfil\insertframenumber/\inserttotalframenumber\hspace*{1ex}}%
+      }%
+    \end{beamercolorbox}%
+  }%
+}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\section{Introduction}
+\subsection{}
+
+\begin{frame}{Introduction}
+
+\begin{itemize}
+    \item Motivation for the use of stochastic optimal control
+    \item Tasks that can be solved using stochastic optimal control
+    \item Necessary tools
+    \item An optimal periodic dividend and risk control problem for an insurance company
+    \item Merton's Optimal investment problem  
+    \item Next steps
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Motivation}
+
+Deterministic optimal control assumes the system evolves predictably. In practice, however, many processes are stochastic. Incorporating randomness into the control framework therefore makes models more realistic.
+
+\end{frame}
+
+\begin{frame}{Problem scope overview}
+
+\begin{itemize}
+    \item Insurance company problem
+    \item Merton's Optimal investment problem
+    \item Passport options
+    \item Avellaneda-Stoikov model
+\end{itemize}
+\end{frame}
+
+
+\section{Math}
+\subsection{}
+
+\begin{frame}{HJB}
+
+Define the value function (cost minimization):
+\begin{equation}
+    V(t, x) = \min_{u(\cdot)}\left[\int_t^\tau C(s, x(s), u(s)) \, ds + D(x(\tau)) \right]
+\end{equation}
+
+subject to the \textbf{state dynamics}:
+\begin{equation}
+    \dot{x}(s) = f(s, x(s), u(s)), \qquad x(t) = x.
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $C(t,x,u)$ is the \textbf{running cost} (cost rate over time),
+    \item $D(x)$ is the \textbf{terminal cost} at the horizon $\tau$.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{HJB}
+    The HJB equation is
+    \begin{equation}
+    \partial_t V(t,x)
+    + \min_{u} \left\{
+        \partial_x V(t,x)\, f(t,x,u)
+        + C(t,x,u)
+    \right\} = 0,
+    \end{equation}
+    with terminal condition
+    \begin{equation}
+        V(\tau,x) = D(x).
+    \end{equation}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Stochastic HJB}
+
+In the stochastic case, define the value function (cost minimization):
+\begin{equation}
+    V(t,x) = \min_{u(\cdot)} \E_{t,x}\!\left[\int_t^\tau C(s, X_s, u_s) \, ds + D(X_\tau) \right],
+\end{equation}
+where \(\E_{t,x}\) denotes conditional expectation given \(X_t=x\).
+
+The controlled state process satisfies
+\begin{equation}
+    dX_s = f(s, X_s, u_s)\,ds + \sigma(s, X_s, u_s)\,dW_s, \qquad X_t=x.
+\end{equation}
+
+\end{frame}
+
+\begin{frame}{Stochastic HJB}
+    The HJB equation is
+    \begin{equation}
+        \partial_t V(t,x) + \min_{u} \left\{ \mathcal{L}^u V(t,x) + C(t,x,u) \right\} = 0,
+    \end{equation}
+    with terminal condition \(V(\tau,x)=D(x)\).
+
+    where
+
+    \begin{equation*}
+        \mathcal{L}^u V(t,x) = \sum_{i=1}^{d} b_i(t,x,u)\,\partial_{x_i} V(t,x)
+    + \frac{1}{2} \sum_{i,j=1}^{d} a_{ij}(t,x,u)\,\partial^{2}_{x_i x_j} V(t,x),
+    \end{equation*}
+    where \(b(t,x,u)=f(t,x,u)\) and \(a(t,x,u)=\sigma(t,x,u)\sigma(t,x,u)^\top\).
+    
+\end{frame}
+
+\begin{frame}{Transition to stationarity}
+    If the problem is time-invariant (time-homogeneous dynamics and costs), the value function does not depend explicitly on time:
+\[
+V(t,x) = V(x).
+\]
+Therefore,
+\[
+\partial_t V(t,x) = 0,
+\]
+and the HJB equation becomes stationary.
+\end{frame}
+
+
+\begin{frame}{Algorithm}
+    \begin{itemize}
+        \item Defining the dynamics of the process (SDE)
+        \item Defining the objective functional and value function
+        \item Admissible control set
+        \item Hamilton--Jacobi--Bellman (HJB) equation
+        \item First-order conditions and optimal control
+    \end{itemize}
+\end{frame}
+
+\section{Merton's Portfolio Problem}
+\subsection{}
+
+\begin{frame}{Motivation}
+    Before Merton, portfolio theory relied on the Markowitz model. The latter calculates weights only once. Merton's model chooses a dynamic policy.
+
+    \textbf{Markowitz's Model in the utility form:}
+    \[
+    \max_{w \in \mathbb{R}^n}\; w^\top \mu - \frac{\gamma}{2}\, w^\top \Sigma w
+    \quad \text{s.t.} \quad
+    \mathbf{1}^\top w = 1
+    \]
+
+\begin{itemize}
+    \item $n$ is the number of risky assets.
+    \item $R \in \mathbb{R}^n$ is the random vector of single-period risky-asset returns.
+    \item $w \in \mathbb{R}^n$ is the vector of portfolio weights in the risky assets.
+    \item $\mu \in \mathbb{R}^n$ is the vector of expected returns, $\mu = \E[R]$.
+    \item $\Sigma \in \mathbb{R}^{n \times n}$ is the covariance matrix of returns, $\Sigma = \Cov(R)$.
+    \item $w^\top \mu$ is the portfolio expected return.
+    \item $w^\top \Sigma w$ is the portfolio return variance.
+    \item $\gamma > 0$ is the risk-aversion parameter (larger $\gamma$ puts more penalty on variance).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Informal Problem Statement}
+The investor chooses how much to consume over time $c_t$ and how to allocate wealth between risky assets and the risk-free asset.
+\end{frame}
+
+\begin{frame}{Problem Notation}
+    The utility function is of the constant relative risk aversion (CRRA) form (Merton's parameterization):
+    \begin{equation}
+    u(x)=\frac{x^{\gamma}}{\gamma}, \qquad \gamma<1,\ \gamma\neq 0.
+    \end{equation}
+    (Then relative risk aversion is $1-\gamma$.)
+    
+    A utility function other than CRRA can be used.
+    
+    \begin{itemize}
+        \item \(\mathcal{A}\) is the set of strategies $a = (\pi, c)$ and \(\tau_a\) is the stopping time.\\ 
+        \item $X_t$ is the wealth at time $t$
+        \item The initial wealth is $x$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Problem Statement}
+
+The objective is
+\begin{equation}
+J^{T}(x;\pi,c)=\E\!\left[\int_{0}^{T} e^{-\rho s}\,u(c_s)\,ds \;+\; e^{-\rho T}\,u(X_{T})\bigg| \ X_0 = x\right]
+\end{equation}\\
+
+where the wealth dynamics follow the SDE
+
+\begin{equation}
+dX_t = \left[(r + \pi_t(\mu - r))X_t - c_t\right]dt + X_t \pi_t \sigma dW_t
+\end{equation}\\
+
+\begin{itemize}
+
+    \item \(\rho > 0\) is the subjective discount rate
+    \item \(\mu\) is the expected return of the risky asset
+    \item \(\sigma\) is the volatility of the risky asset
+    \item \(r\) is the risk-free rate
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Defining the value function}
+
+Assuming \(T \to \infty\) (and a transversality condition so the terminal term vanishes), define the infinite-horizon objective
+\begin{equation}
+J(x;\pi,c)= \E \left[\int_{0}^{\infty} e^{-\rho s}\,u(c_s)\,ds \bigg| \ X_0 = x\right].
+\end{equation}
+
+The value function is
+\begin{equation}
+V(x) = \sup_{(\pi, c) \in \mathcal{A}} J(x;\pi,c).
+\end{equation}
+
+\end{frame}
+
+
+\begin{frame}{Stationarity (infinite horizon)}
+With time-homogeneous coefficients and an infinite horizon, the value function is stationary: \(V(t,x)=V(x)\).
+The HJB equation therefore reduces to an ODE in wealth \(x\).
+\end{frame}
+
+\begin{frame}{HJB equation}
+    The optimality equation becomes an ODE in wealth:
+    \begin{equation}
+    0=\max_{c,\pi}
+    \Big[u(c)-\rho V(x)
+    +V'(x)\big((\pi(\mu-r)+r)x-c\big)
+    +\frac12 V''(x)\sigma^2\pi^2 x^2\Big].
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Solution}
+    The first-order conditions are
+    \begin{equation}
+    0=u'(c)-V'(x),
+    \end{equation}
+    \begin{equation}
+    0=(\mu-r)V'(x)+V''(x)\sigma^2\pi x.
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Solution}
+    The optimal decision rules are:
+    
+    \begin{equation}
+    \boxed{\ \pi_\infty^*=\frac{\mu-r}{\sigma^2(1-\gamma)}\ }
+    \end{equation}
+    
+    \begin{equation}
+    \boxed{\ c_t^*=
+    \left\{
+    \frac{\rho}{1-\gamma}
+    -\gamma\left[
+    \frac{(\mu-r)^2}{2\sigma^2(1-\gamma)^2}
+    +\frac{r}{1-\gamma}
+    \right]
+    \right\}X_t\ }
+    \end{equation}
+\end{frame}
+
+
+
+\section{Insurance}
+\subsection{}
+
+\begin{frame}{Motivation}
+
+The surplus of an insurance company can be modeled as a stochastic process.
+This allows us to apply stochastic optimal control methods to the problem of managing the reinsurance part and dividend payments.
+
+\end{frame}
+
+\begin{frame}{Problem Statement}
+The surplus process can be described as follows
+
+\begin{equation}
+    X_t = x_0 + \lambda a [1 + \eta] t - \lambda a [1 - u_t] [1 + \mu] t - u_t \sum_{j=1}^{N_t^{\lambda}} Y_j - L_t, \quad \text{for } t \ge 0,
+    \label{eq:surplus_process}
+\end{equation}
+
+\begin{itemize}
+    \item $x_0$ denotes the initial surplus of the insurance company.
+    
+    \item $u_t$ represents the proportion of risk transferred to the reinsurer at time $t$.
+    
+    \item $Y_j$ is the size of the $j$-th insurance claim, where $\E[Y] = a$ and $\Var(Y) = \widehat{\sigma}^2$.
+    
+    \item $\lambda$ is the intensity (arrival rate) of insurance claims.
+    
+    \item $\eta$ denotes the premium inflow rate from policyholders.
+    
+    \item $\mu$ is the payment rate from the insurer to the reinsurance company.
+    
+    \item $L_t$ is a non-decreasing process representing the cumulative dividends paid up to time $t$.
+\end{itemize}
+
+
+
+\end{frame}
+
+\begin{frame}{Problem Statement}
+We can rewrite the process as
+
+\[
+X_t = x_0 + \lambda a \bigl[ \eta - [1 - u_t] \mu \bigr] t + u_t 
+    \underbrace{\left[ \lambda a t - \sum_{j=1}^{N_t^\lambda} Y_j \right]}_{Z_t} - L_t, 
+    \quad \text{for } t \ge 0.
+\]
+
+We have \(\E[Z_t]=0\) and \(\Var(Z_t)=\lambda t(\widehat{\sigma}^2+a^2)\approx \widehat{\sigma}^2\lambda t\). For \(\lambda \gg 1\), a diffusion approximation yields \(Z_t \approx \sigma W_t\), where \(W_t\) is a standard Brownian motion and \(\sigma = \widehat{\sigma}\sqrt{\lambda}\).
+\end{frame}
+
+\begin{frame}{Dynamics of the process and defining the dividend payment}
+The diffusion approximation is
+
+\begin{equation}
+    dX_t = [\eta - [1 - u_t]\mu] dt + \sigma u_t dW_t - dL_t, \quad \text{for } t \ge 0 \text{ and } X_0 = x_0.
+    \label{eq:diff_approx}
+\end{equation}
+
+Dividend payments may be described as follows
+    \begin{equation}
+    L_t = \int_0^t \nu_s \, \mathrm{d}N_s^\gamma, \quad \text{for } t \ge 0,
+    \label{eq:divid}
+    \end{equation}
+
+where \(\gamma > 0\) is the intensity.
+
+\end{frame}
+
+\begin{frame}{Defining the set of controls}
+Let $\mathcal{A}$ denote the set of strategies $\pi = (u^{\pi}, L^{\pi})$ such that $u^{\pi} \in [0,1]$, $L^{\pi}$ satisfies \eqref{eq:divid}, and $0 \le \nu_t^{\pi} \le X_{t-}^{\pi}$. 
+A strategy $\pi$ is said to be admissible if $\pi \in \mathcal{A}$.
+
+\end{frame}
+
+\begin{frame}{Defining NPV}
+For each \(\pi \in \mathcal{A}\), the expected NPV is given by
+
+\begin{equation}
+    J^\pi(x) = \E_x\left[\int_0^{\tau^\pi} e^{-\delta t} dL^\pi_t \bigg| X_0 = x \right] = \E_x\left[\int_0^{\tau^\pi} e^{-\delta t} \nu_t^\pi dN^\gamma_t\bigg| X_0 = x\right]
+    \label{eq:npv}
+\end{equation}
+
+Here, $\E_x$ denotes the conditional expectation given the initial surplus level $x$, 
+$\delta > 0$ is the discount rate, and 
+$\tau^{\pi} := \inf\{ t > 0 : X_t^{\pi} < 0 \}$ represents the time of ruin. 
+Our objective is to determine the value function $V$ defined by
+
+\begin{equation}
+V(x) := \sup_{\pi \in \mathcal{A}} J^{\pi}(x), \qquad x \ge 0.
+\label{eq:NPV_max}
+\end{equation}
+
+There is an assumption that \(V \in C^2(0, \infty)\) and concave.
+
+\end{frame}
+
+\begin{frame}{HJB equation}
+To find the optimal \(V\), we construct the HJB equation as follows:
+
+\begin{equation}
+    V(x) = \underbrace{(\nu + \E_{x}[V(X_{t} - \nu)]) \gamma t e^{-\delta t}}_{\text{in case of dividend payment}} + \underbrace{(1 - \gamma t) e^{-\delta t} \E_{x}[V(X_{t})]}_{\text{in case no dividend is paid}} + o(t).
+    \label{eq:HJB_const}
+\end{equation}
+
+\[
+(\nu + \E_{x}[V(X_{t} - \nu) - V(x)]) \gamma t e^{-\delta t} + (1 - \gamma t) e^{-\delta t} \E_{x}[V(X_{t}) - V(x)] = o(t)
+\]
+
+\noindent
+\textbf{Intuition:} The current value equals the expected discounted value over a small time interval $t$ plus a possible dividend payment. In addition, \(\gamma t\) comes from the first-order expansion of the Poisson probabilities (up to \(o(t)\)).
+
+\end{frame}
+
+\begin{frame}{HJB equation}
+We find the change over time of the discounted part and the value function by differentiating \(Y_t = e^{-\delta t}V(X_t)\).
+
+\begin{equation}
+    dY_t = e^{-\delta t}dV(X_t) - \delta e^{-\delta t} V(X_t) \Rightarrow{} dY_t = e^{- \delta t} (dV(X_t) - \delta V(X_t))
+    \label{eq:diff_of_Y_t}
+\end{equation}
+
+For \(dV(X_t)\) we use It\^{o}'s formula. The dynamics are the same as in \eqref{eq:diff_approx}, but without the dividend term \(L_t\). Set \(a_s := \eta - (1-u_s)\mu\).
+    
+\end{frame}
+
+\begin{frame}{Derivation of HJB equation}
+We consider two cases:
+
+\begin{enumerate}
+    \item The company does not pay a dividend.
+    \item The company pays a dividend.
+\end{enumerate}
+
+Consider the first case:
+
+\begin{align}
+    &e^{-\delta t}V(X_t) - V(x) = \int_0^t e^{-\delta s}
+        [a_s V'(X_s)
+        + \frac{1}{2}\sigma^2 u_s^2 V''(X_s) \notag \\
+    & \quad - \delta V(X_s)]ds 
+     + \int_0^t e^{-\delta s} \sigma u_s V'(X_s)\, dW_s.
+    \label{eq:first_case_1}
+\end{align}
+    
+\end{frame}
+
+\begin{frame}{Derivation of HJB equation}
+
+Take expectations in \eqref{eq:first_case_1}.
+
+\begin{align}
+    &\E_x\left[e^{-\delta t}V(X_t) - V(x)\right] = \notag \\
+    & \quad = \E_x\left[\int_0^t e^{-\delta s}
+        \left[a_s V'(X_s)
+        + \frac{1}{2}\sigma^2 u_s^2 V''(X_s)
+        - \delta V(X_s)\right]ds\right]
+    \label{eq:first_case_2}
+\end{align}
+
+Let's do the same for the second case.
+
+\end{frame}
+
+\begin{frame}{Derivation of HJB equation}
+\begin{align}
+e^{-\delta t}V(X_{t-} - \nu) - V(x)
+&= \int_0^t e^{-\delta s}
+\Big[
+a_s V'(X_s)
++ \tfrac{1}{2}\sigma^2 u_s^2 V''(X_s)
+- \delta V(X_s)
+\Big] ds \notag \\
+&\quad + \int_0^t e^{-\delta s}
+\sigma u_s V'(X_s)\, dW_s \notag \\
+&\quad + e^{-\delta t}
+\Big(
+V(X_{t-}-\nu)-V(X_{t-})
+\Big).
+\label{eq:second_case_1}
+\end{align}
+Taking expectations yields
+\begin{align}
+&\E_x \!\left[e^{-\delta t}V(X_{t-}-\nu)-V(x)\right] = \notag \\
+&= \E_x \!\left[\int_0^t e^{-\delta s}
+    \left[a_s V'(X_s) + \frac{1}{2} \sigma^2 u_s^2 V''(X_s) - \delta V(X_s)\right] ds \right] + \notag \\
+&\quad + \E_x\left[e^{-\delta t}\left[ V(X_{t-}-\nu) - V(X_{t-})\right] \right].
+\label{eq:second_case_2}
+\end{align}
+\end{frame}
+
+\begin{frame}{Derivation of HJB equation}
+Substituting \eqref{eq:first_case_2} and \eqref{eq:second_case_2} into \eqref{eq:HJB_const},
+
+\begin{align}
+    &\nu\gamma t e^{-\delta t} + \E_x \!\left[\int_0^t e^{-\delta s}
+    \left[a_s V'(X_s) + \frac{1}{2} \sigma^2 u^2_s V''(X_s) - \delta V(X_s)\right] ds \right]\gamma t + \notag \\
+    &\quad + \E_x \left[e^{-\delta t}\left[ V(X_{t-}-\nu) - V(X_{t-})\right]\right] \gamma t +  \notag \\
+    & + (1 - \gamma t) \E_x\left[\int_0^t e^{-\delta s}
+        \left[a_s V'(X_s)
+        + \frac{1}{2}\sigma^2 u_s^2 V''(X_s)
+        - \delta V(X_s)\right]ds\right] = 0
+    \label{eq:done}
+\end{align}
+
+\end{frame}
+
+\begin{frame}{Derivation of HJB equation}
+Dividing \eqref{eq:done} by \(t\) and letting \(t \to 0\) yields the stationary HJB equation:
+
+\begin{equation}
+    \max_{0 \leq \nu \leq x, \ 0 \leq u \leq 1} \underbrace{\mathcal{L}^u V(x) + \gamma \left[V(x - \nu) - V(x) + \nu  \right]}_{\Xi_{x}(u,\nu)} = 0,
+    \label{eq:HJB}
+\end{equation}
+where \(V(0) = 0\) and
+\begin{equation*}
+    \mathcal{L}^u V(x) = \left[[\eta - [1-u]\mu]V'(x)+ \frac{1}{2}\sigma^2 u^2 V''(x)- \delta V(x)\right].
+\end{equation*}
+
+    
+\end{frame}
+
+\begin{frame}{Defining the barrier strategy}
+
+For each \( \mathbf{b} = (b_1, b_2)\), define a periodic-classical barrier strategy \(\pi^{\mathbf{b}} = (u^{\mathbf{b}}, L^{\mathbf{b}})\), where \(u^{*}(\cdot)\) is the feedback control on \((0,b_1)\) (specified below):
+
+\begin{equation}
+    u_t^{\mathbf{b}} := 
+    \begin{cases}
+        u^{*}(X_t^{\mathbf{b}}), & \text{if } X_t^{\mathbf{b}} \in (0,b_1), \\
+        1, & \text{if } X_t^{\mathbf{b}} \in [b_1,\infty),
+    \end{cases}
+    \label{eq:barrier_strat}
+\end{equation}
+\[
+L_t^{\mathbf{b}} = \int_{0}^{t} \nu_s^{\mathbf{b}} \, dN_s^\gamma,
+\qquad
+\nu_s^{\mathbf{b}} = \max\{ X_s^{\mathbf{b}} - b_2, 0 \}.
+\]
+
+\end{frame}
+
+\begin{frame}{Defining the barriers}
+    The optimal barriers are obtained by solving \eqref{eq:HJB}
+
+    \begin{equation}
+    b_1^{\gamma} = \inf \left\{ x > 0 : -\frac{\mu}{\sigma^2} f(x;v) \geq 1 \right\}, \quad
+    b_2^{\gamma} = \inf \left\{ x > 0 : v'(x) < 1 \right\},
+    \label{eq:optim_bar}
+\end{equation}
+
+
+where \(f(x; v) := \frac{v'(x)}{v''(x)}\) and \(\inf \varnothing = \infty\).
+
+\end{frame}
+
+\begin{frame}{Optimal strategies}
+Based on the optimal barriers, the optimal strategy is conjectured to take the form
+    \[
+    u^{*}(x) =
+    \begin{cases}
+        -\dfrac{\mu}{\sigma^{2}} f(x;v), & \text{if } x \in (0,b_{1}^{\gamma}),\\[4pt]
+        1, & \text{if } x \in [b_{1}^{\gamma},\infty),
+    \end{cases}
+    \]
+    \\
+    \[
+    \nu^{*}(x) =
+    \begin{cases}
+        0, & \text{if } x \in (0,b_{2}^{\gamma}),\\[4pt]
+        x - b_{2}^{\gamma}, & \text{if } x \in [b_{2}^{\gamma},\infty),
+    \end{cases}
+    \]
+\end{frame}
+
+
+
+\begin{frame}{Illustration of the strategies}
+
+\begin{figure}
+\centering
+\includegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{illustratoin.png}
+\caption{Illustration of the barriers}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}{System of the differential equations for \(v(x)\)}
+
+\begin{align}
+-\frac{\mu^2 [v'(x)]^2}{2\sigma^2 v''(x)}
++ [\eta-\mu]v'(x) - \delta v(x) +
+& \notag \\
+\qquad + \gamma\{x-b_2+v(b_2)-v(x)\}\,\mathbb{1}_{\{x-b_2>0\}}
+&= 0 \quad \text{for } x\in(0,b_1),
+\end{align}
+
+\begin{align}
+\frac{1}{2}\sigma^2 v''(x) + \eta v'(x) - \delta v(x) +
+& \notag \\
+\qquad + \gamma\{x-b_2+v(b_2)-v(x)\}\,\mathbb{1}_{\{x-b_2>0\}}
+&= 0 \quad \text{for } x\in(b_1,\infty),
+\end{align}
+
+\[
+\text{s.t. } v(0)=0.
+\]
+
+\end{frame}
+
+
+\begin{frame}{Solution for the very expensive case}
+
+\[
+v_{\gamma,b}(x)=
+\begin{cases}
+c_{1,1}(b_2)\,h_1(x), \ \ \ \ x\in(0,b_2),\\[4pt]
+c_{1,2}(b_2)e^{\lambda_\gamma(x-b_2)}
+\dfrac{\gamma}{\gamma+\delta}\!\left[x-b_2+v_{\gamma,b}(b_2)\right]
+\dfrac{\eta}{\gamma+\delta}, \ \ \ \  x\in[b_2,\infty),
+\end{cases}
+\]\\
+
+
+where \(\lambda_\gamma\) is the negative root of 
+\[
+\frac{\sigma^2}{2}r^2+\eta r-(\delta+\gamma)=0,
+\]
+
+\[
+h_1(x)=e^{\theta_+ x}-e^{\theta_- x}\quad \text{for } x\in(0,\infty),
+\]
+
+
+with \(\theta_+,\theta_-\) the positive and negative root, respectively, of 
+\(\frac{\sigma^2}{2}r^2+\eta r-\delta=0.
+\)
+
+
+\end{frame}
+
+\begin{frame}{Solution to the Cauchy problem}
+\[
+c_{1,1}(b_2)=
+\frac{\frac{\gamma}{\gamma+\delta}\!\left[1-\frac{\eta\lambda_\gamma}{\gamma+\delta}\right]}
+{h_1'(b_2)-\frac{\delta\lambda_\gamma}{\gamma+\delta}h_1(b_2)}\]
+\\
+\[
+c_{1,2}(b_2)=
+\frac{1}{\gamma+\delta}
+\left[\delta c_{1,1}(b_2)h_1(b_2)-\frac{\gamma\eta}{\gamma+\delta}\right]
+\]
+
+\end{frame}
+
+\section{Conclusion}
+\subsection{}
+
+\begin{frame}{Assumptions/Limitations}
+\begin{itemize}
+    \item In some cases solving the non-linear differential equation analytically is impossible.
+    \item For some processes it is quite hard to solve the optimization problem (i.e. compound Poisson process).
+    \item Formulation of HJB equation requires rigorous math.
+    \item Non-linear differential equations can be solved with PINNs (Physics-informed neural networks)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{References}
+\begin{enumerate}
+    \item Karatzas, I., \& Shreve, S. E. (1991). Brownian Motion and Stochastic Calculus (2nd ed.). Springer. (Graduate Texts in Mathematics, Vol. 113).
+    \item  Merton, Robert C. (1969). Lifetime Portfolio Selection under Uncertainty: The Continuous-Time Case. The Review of Economics and Statistics, 51(3), 247–257.
+    \item Kelbert, M., \& Moreno-Franco, H. A. (2025). An optimal periodic dividend and risk control problem for an insurance company. Insurance: Mathematics and Economics, 125, 103154.
+\end{enumerate}
+\end{frame}   
+
+\end{document}

@@ -35,6 +35,8 @@ Here we store lectures and tasks of the Club.
 15) November 11, 2023 - Neural Processes (Alexander Plakhin, Nikolai Averianov)
 
 16) June, 2, 2024 - Partial Differential Equations from Probabilistic Perspective (Sergei Tikhonov)
+  
+17) February 28, 2026 - Stochastic Optimal Control (Ivan Khromyshchenko, Narek Sargsian)
 #### Founders of the Club:
 Nikolai Averianov ([GitHub](https://github.com/debasering), [Telegram](https://t.me/debasering))  
 Alexander Plakhin ([GitHub](https://github.com/aaplakhin), [Telegram](https://t.me/ipomeya31))
